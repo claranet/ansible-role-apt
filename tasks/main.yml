@@ -1,0 +1,54 @@
+---
+
+- name: Installing required packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - aptitude
+    - python-apt
+    - python-pycurl
+
+- name: Adding apt signing key
+  apt_key:
+    id: "{{ item.id | default(omit) }}"
+    file: "{{ item.file | default(omit) }}"
+    data: "{{ item.data | default(omit) }}"
+    keyring: "{{ item.keyring | default(omit) }}"
+    keyserver: "{{ item.keyserver | default(omit) }}"
+    url: "{{ item.url | default(omit) }}"
+    validate_certs: "{{ item.validate_certs | default(omit) }}"
+    state: present
+  with_items: "{{ keys }}"
+
+- name: Adding repositories
+  apt_repository:
+    repo: "{{ item.repo }}"
+    codename: "{{ item.codename | default (omit) }}"
+    update_cache: yes
+  with_items: "{{ repositories }}"
+
+#- name: Updating cache
+#  apt:
+#    update_cache: yes
+#    cache_valid_time: "{{ cache_valid_time }}"
+
+- name: Upgrading system
+  apt:
+    upgrade: "{{ upgrade }}"
+    update_cache: yes
+    autoremove: "{{ autoremove }}"
+  when: upgrade
+
+- name: Installing packages
+  apt:
+    name: "{{ item.name | default(omit) }}"
+    deb: "{{ item.deb | default(omit) }}"
+    state: present
+    autoremove: "{{ autoremove }}"
+    force: "{{ force }}"
+    dpkg_options: "{{ dpkg_options | default(omit) }}"
+    install_recommends: "{{ install_recommends }}"
+    default_release: "{{ default_release | default(omit) }}"
+  with_items: "{{ packages }}"
+
