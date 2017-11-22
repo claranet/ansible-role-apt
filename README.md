@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Istall packages and add repositories on apt based distributions :
+Install packages and add repositories on apt based distributions :
 
 Requirements
 ------------
@@ -13,15 +13,15 @@ Role Variables
 
 Name | Type | Description | Default
 ---------|----------|---------|---------
- packages | list | package name to install | []
- repositories | list | package name to install | []
- keys | list | package name to install | []
- upgrade | string | package name to install | no
- force | boolean | package name to install | no
- autoremove | boolean | package name to install | yes
- install_recommends | boolean | package name to install | no
- dpkg_options | string | package name to install | ""
- default_release | string | package name to install | ""
+ apt_packages | list | package name to install | []
+ apt_repositories | list | package name to install | []
+ apt_keys | list | package name to install | []
+ apt_upgrade | string | package name to install | no
+ apt_force | boolean | package name to install | no
+ apt_autoremove | boolean | package name to install | yes
+ apt_install_recommends | boolean | package name to install | no
+ apt_dpkg_options | string | package name to install | ""
+ apt_default_release | string | package name to install | ""
 
 Dependencies
 ------------
@@ -39,7 +39,7 @@ Install packages
   roles:
     - role: apt
   vars:
-    - packages:
+    - apt_packages:
       # latest packages
       - name: tree
       - name: python-pip
@@ -57,7 +57,7 @@ Add repositories and install packages from those
   roles:
     - role: apt
   vars:
-    - repositories:
+    - apt_repositories:
       # contrib repo
       - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
       # non-free repo
@@ -68,10 +68,10 @@ Add repositories and install packages from those
       - repo: ppa:nginx/stable
         # not needed on ubuntu distribution
         codename: trusty
-    - keys:
+    - apt_keys:
       # dotdeb key 
       - url: https://www.dotdeb.org/dotdeb.gpg
-    - packages:
+    - apt_packages:
       # package from contrib repo
       - name: java-package
       # package from non-free repo
@@ -91,7 +91,7 @@ Do an upgrade
     - role: apt
   vars:
     # could be safe | full | dist
-    - upgrade: yes
+    - apt_upgrade: yes
 ```
 
 All these examples could be combined in one playbook

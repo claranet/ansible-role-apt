@@ -1,20 +1,20 @@
 # sets the amount of time the cache is valid
-#cache_valid_time: 3600
+#apt_cache_valid_time: 3600
 # upgrade system: safe | full | dist
-upgrade: no
+apt_upgrade: no
 # remove packages that are no longer needed for dependencies
-autoremove: yes
+apt_autoremove: yes
 # packages to install
-packages: []
+apt_packages: []
 # repositories to register
-repositories: []
+apt_repositories: []
 # gpg keys for external repositories
-keys: []
+apt_keys: []
 # Force install
-force: no
+apt_force: no
 # Add dpkg options to apt command
-#dpkg_options: "force-confdef,force-confold"
+#apt_dpkg_options: "force-confdef,force-confold"
 # Automatically install recommended packages
-install_recommends: no
+apt_install_recommends: no
 # Target release (i.e. for backports)
-#default_release: "{{ ansible_distribution_release }}"
+#apt_default_release: "{{ ansible_distribution_release }}"
