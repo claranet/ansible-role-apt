@@ -6,7 +6,7 @@ Install packages and add repositories on apt based distributions :
 Requirements
 ------------
 
-Ansible version > 2.1
+Ansible version >= 2.1
 
 Role Variables
 --------------
