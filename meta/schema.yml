@@ -1,0 +1,48 @@
+---
+name: ansible-role-apt
+properties:
+  apt_autoremove:
+    default: true
+    required: true
+    title: apt_autoremove
+    type: string
+  apt_cache_valid_time:
+    title: apt_cache_valid_time
+    type: string
+  apt_default_release:
+    title: apt_default_release
+    type: string
+  apt_dpkg_options:
+    title: apt_dpkg_options
+    type: string
+  apt_force:
+    required: true
+    title: apt_force
+    type: string
+  apt_install_recommends:
+    required: true
+    title: apt_install_recommends
+    type: string
+  apt_keys:
+    items:
+      type: string
+    required: true
+    title: apt_keys
+    type: array
+  apt_packages:
+    items:
+      type: string
+    required: true
+    title: apt_packages
+    type: array
+  apt_repositories:
+    items:
+      type: string
+    required: true
+    title: apt_repositories
+    type: array
+  apt_upgrade:
+    required: true
+    title: apt_upgrade
+    type: string
+type: object
