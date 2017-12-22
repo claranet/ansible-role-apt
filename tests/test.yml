@@ -33,9 +33,3 @@
       - repo: ppa:nginx/stable
         codename: trusty
     - apt_upgrade: yes
-  pre_tasks:
-    - name: Verify Ansible version requirements.
-      assert:
-        that: "ansible_version.full | version_compare('2.3', '>=')"
-        msg: >
-          "You must update Ansible to at least version 2.3"
