@@ -27,11 +27,6 @@
     update_cache: yes
   with_items: "{{ apt_repositories }}"
 
-#- name: Updating cache
-#  apt:
-#    update_cache: yes
-#    cache_valid_time: "{{ apt_cache_valid_time }}"
-
 - name: Upgrading system
   apt:
     upgrade: "{{ apt_upgrade }}"
@@ -49,5 +44,6 @@
     dpkg_options: "{{ apt_dpkg_options | default(omit) }}"
     install_recommends: "{{ apt_install_recommends }}"
     default_release: "{{ apt_default_release | default(omit) }}"
+    update_cache: yes
   with_items: "{{ apt_packages }}"
 
