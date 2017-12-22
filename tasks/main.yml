@@ -7,6 +7,7 @@
     - aptitude
     - python-apt
     - python-pycurl
+  become: yes
 
 - name: Adding apt signing key
   apt_key:
@@ -19,6 +20,7 @@
     validate_certs: "{{ item.validate_certs | default(omit) }}"
     state: present
   with_items: "{{ apt_keys }}"
+  become: yes
 
 - name: Adding repositories
   apt_repository:
@@ -26,6 +28,7 @@
     codename: "{{ item.codename | default (omit) }}"
     update_cache: yes
   with_items: "{{ apt_repositories }}"
+  become: yes
 
 - name: Upgrading system
   apt:
@@ -33,6 +36,7 @@
     update_cache: yes
     autoremove: "{{ apt_autoremove }}"
   when: apt_upgrade
+  become: yes
 
 - name: Installing packages
   apt:
@@ -46,4 +50,5 @@
     default_release: "{{ apt_default_release | default(omit) }}"
     update_cache: yes
   with_items: "{{ apt_packages }}"
+  become: yes
 
