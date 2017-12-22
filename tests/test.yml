@@ -1,10 +1,12 @@
 ---
 
 - name: APT manager
-  hosts: localhost
+  hosts: all
   remote_user: ansible
+
   roles:
-    - role: ansible-role-apt
+    - ansible-role-apt
+
   vars:
     - apt_packages:
       # package from official repo
