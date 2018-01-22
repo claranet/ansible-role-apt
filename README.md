@@ -13,15 +13,15 @@ Role Variables
 
 Name | Type | Description | Default
 ---------|----------|---------|---------
- apt_packages | list | package name to install | []
- apt_repositories | list | package name to install | []
- apt_keys | list | package name to install | []
- apt_upgrade | string | package name to install | no
- apt_force | boolean | package name to install | no
- apt_autoremove | boolean | package name to install | yes
- apt_install_recommends | boolean | package name to install | no
- apt_dpkg_options | string | package name to install | ""
- apt_default_release | string | package name to install | ""
+ apt_packages | list | packages list to install | []
+ apt_repositories | list | repositories list to configure | []
+ apt_keys | list | keys list to use with repositories | []
+ apt_upgrade | string | do an upgrade (no, yes, safe, full, dist) | no
+ apt_force | boolean | force installs / removes | no
+ apt_autoremove | boolean | remove unused dependency packages | yes
+ apt_install_recommends | boolean | install recommended packages | no
+ apt_dpkg_options | string | add dpkg options to apt command | ""
+ apt_default_release | string | set pin priorities (like apt -t) | ""
 
 Dependencies
 ------------
