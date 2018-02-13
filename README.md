@@ -1,19 +1,27 @@
 Role Name
 =========
 
-Install packages, manage repository, configure apt for debian based distributions :
+Install packages and add repositories on apt based distributions :
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Ansible version >= 2.3
 
 Role Variables
 --------------
 
 Name | Type | Description | Default
 ---------|----------|---------|---------
- pkg | list | package name to install | ""
+ apt_packages | list | packages list to install | []
+ apt_repositories | list | repositories list to configure | []
+ apt_keys | list | keys list to use with repositories | []
+ apt_upgrade | string | do an upgrade (no, yes, safe, full, dist) | no
+ apt_force | boolean | force installs / removes | no
+ apt_autoremove | boolean | remove unused dependency packages | yes
+ apt_install_recommends | boolean | install recommended packages | no
+ apt_dpkg_options | string | add dpkg options to apt command | ""
+ apt_default_release | string | set pin priorities (like apt -t) | ""
 
 Dependencies
 ------------
@@ -23,11 +31,67 @@ No dependencies
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Install packages
 
 ```
 ---
 - hosts: localhost
   roles:
-    - { role: apt, package_name: ['nginx','curl'] }
+    - role: apt
+  vars:
+    - apt_packages:
+      # latest packages
+      - name: tree
+      - name: python-pip
+      # specific package version
+      - name: vim=2:8.*
+      # deb file
+      - deb: http://repo.zabbix.com/zabbix/3.2/{{ ansible_distribution | lower }}/pool/main/z/zabbix-release/zabbix-release_3.2-1+{{ ansible_distribution_release }}_all.deb
 ```
+
+Add repositories and install packages from those 
+
+```
+---
+- hosts: localhost
+  roles:
+    - role: apt
+  vars:
+    - apt_repositories:
+      # contrib repo
+      - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
+      # non-free repo
+      - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} non-free
+      # dotdeb repo
+      - repo: deb http://packages.dotdeb.org {{ ansible_distribution_release }} all
+      # nginx ppa repo
+      - repo: ppa:nginx/stable
+        # not needed on ubuntu distribution
+        codename: trusty
+    - apt_keys:
+      # dotdeb key 
+      - url: https://www.dotdeb.org/dotdeb.gpg
+    - apt_packages:
+      # package from contrib repo
+      - name: java-package
+      # package from non-free repo
+      - name: rar
+      # package from dotdeb repo
+      - name: php7.0
+      # package from nginx ppa repo
+      - name: nginx
+```
+
+Do an upgrade
+
+```
+---
+- hosts: localhost
+  roles:
+    - role: apt
+  vars:
+    # could be safe | full | dist
+    - apt_upgrade: yes
+```
+
+All these examples could be combined in one playbook
