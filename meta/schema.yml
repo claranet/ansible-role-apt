@@ -26,19 +26,71 @@ properties:
     type: boolean
   apt_keys:
     items:
-      type: string
+      type: object
+      properties:
+        id:
+          title: id
+          type: string
+          required: false
+        file:
+          title: file
+          type: string
+          required: false
+        data:
+          title: data
+          type: string
+          required: false
+        keyring:
+          title: keyring
+          type: string
+          required: false
+        keyserver:
+          title: keyserver
+          type: string
+          required: false
+        url:
+          title: url
+          type: string
+          required: false
+        validate_certs:
+          title: validate_certs
+          type: string
+          required: false
     required: false
     title: apt_keys
     type: array
   apt_packages:
     items:
-      type: string
+      type: object
+      properties:
+        name:
+          title: package_name
+          type: string
+          required: false
+        deb:
+          title: package_url
+          type: string
+          required: false
     required: false
     title: apt_packages
     type: array
   apt_repositories:
     items:
-      type: string
+      type: object
+      properties:
+        repo:
+          title: repo
+          type: string
+          required: false
+        codename:
+          title: codename
+          type: string
+          required: false
+        update_cache:
+          title: update_cache
+          type: boolean
+          required: false
+          default: true
     required: false
     title: apt_repositories
     type: array
