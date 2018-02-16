@@ -1,5 +1,5 @@
 ---
-name: ansible-role-apt
+name: apt
 properties:
   apt_autoremove:
     default: true
