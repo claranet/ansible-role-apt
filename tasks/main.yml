@@ -28,6 +28,7 @@
     codename: "{{ item.codename | default (omit) }}"
     update_cache: yes
   with_items: "{{ apt_repositories }}"
+  when: item.repo is defined
   become: yes
 
 - name: Upgrading system
