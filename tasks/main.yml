@@ -4,10 +4,11 @@
     pkg: "{{ item }}"
     state: present
   with_items:
+    - apt-transport-https
     - aptitude
     - python-apt
     - python-pycurl
-  become: yes
+  become: true
 
 - name: Adding apt signing key
   apt_key:
@@ -20,24 +21,24 @@
     validate_certs: "{{ item.validate_certs | default(omit) }}"
     state: present
   with_items: "{{ apt_keys }}"
-  become: yes
+  become: true
 
 - name: Adding repositories
   apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default (omit) }}"
-    update_cache: yes
+    update_cache: true
   with_items: "{{ apt_repositories }}"
   when: item.repo is defined
-  become: yes
+  become: true
 
 - name: Upgrading system
   apt:
     upgrade: "{{ apt_upgrade }}"
-    update_cache: yes
+    update_cache: true
     autoremove: "{{ apt_autoremove }}"
   when: apt_upgrade
-  become: yes
+  become: true
 
 - name: Installing packages
   apt:
@@ -49,7 +50,6 @@
     dpkg_options: "{{ apt_dpkg_options | default(omit) }}"
     install_recommends: "{{ apt_install_recommends }}"
     default_release: "{{ apt_default_release | default(omit) }}"
-    update_cache: yes
+    update_cache: true
   with_items: "{{ apt_packages }}"
-  become: yes
-
+  become: true

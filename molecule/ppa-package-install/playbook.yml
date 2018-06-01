@@ -1,0 +1,19 @@
+---
+- name: ppa-package-install
+  hosts: all
+  remote_user: ansible
+  roles:
+    - role: ansible-role-apt
+  vars:
+    apt_upgrade: true
+    apt_packages:
+      - name: nginx
+      - name: nodejs
+    apt_keys:
+      - url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        validate_certs: "False"
+    apt_repositories:
+      - repo: ppa:nginx/stable
+        codename: trusty
+      - repo: "deb https://deb.nodesource.com/node_10.x {{ ansible_distribution_release|lower }} main"
+      - repo: "deb-src https://deb.nodesource.com/node_10.x {{ ansible_distribution_release|lower }} main"

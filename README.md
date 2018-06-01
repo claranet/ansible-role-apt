@@ -1,5 +1,5 @@
-Role Name
-=========
+ansible-role-apt
+================
 
 Install packages and add repositories on apt based distributions :
 
@@ -95,3 +95,34 @@ Do an upgrade
 ```
 
 All these examples could be combined in one playbook
+
+
+Testing
+-------
+
+###How to use it
+
+Testing uses Molecule : https://molecule.readthedocs.io/en/latest/
+``` 
+cd ansible-role-apt
+molecule test -s name_of_scenario
+
+```
+
+###Scenarios created for ansible-role-apt
+
+- basic-package-install : to check if the role has successfully installed the simple/with dependencies package . 
+- non-free_contrib_repo : to check if the role has successfully installed the package from a non-free and contrib repository also a dotdeb key and repo .
+- ppa-package-install   : to check if the role has successfully installed the package from a ppa repo .
+- repo-package-install  : to check if the role has successfully installed the package from a custom repository ( zabbix ) .
+- spec-version-package-install : to check if the role has successfully installed the package with a specific version .
+
+Molecule test this role on these docker images : 
+------------------------------------------------
+
+- Debian 7
+- Debian 8
+- Debian 9
+- Ubuntu 14.04
+- Ubuntu 16.04  
+- Ubuntu 18.04

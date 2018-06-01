@@ -1,0 +1,19 @@
+---
+image:
+  name: 845945358136.dkr.ecr.eu-west-1.amazonaws.com/ansible-molecule:2.13.1
+  aws:
+    access-key: $AWS_ACCESS_KEY_ID
+    secret-key: $AWS_SECRET_ACCESS_KEY
+pipelines:
+  default:
+    - step:
+        script:
+          - ln -s $PWD ../ansible-role-apt && cd ../ansible-role-apt
+          - sudo pip install ansible==2.3.*
+          - molecule test -s minimal
+          - sudo pip install ansible==2.4.*
+          - molecule test -s minimal
+          - sudo pip install --upgrade ansible
+          - molecule test --all
+        services:
+          - docker

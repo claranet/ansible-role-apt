@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu14
+    image: ubuntu:14.04
+  - name: ubuntu16
+    image: ubuntu:16.04
+  - name: ubuntu18
+    image: ubuntu:18.04
+  - name: debian7
+    image: debian:7
+  - name: debian8
+    image: debian:8
+  - name: debian9
+    image: debian:9
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+scenario:
+  name: basic-package-install
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

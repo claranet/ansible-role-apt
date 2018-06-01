@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  remote_user: ansible
+  roles:
+    - role: ansible-role-apt
+  vars:
+    apt_upgrade: true
+    apt_packages:
+      - name: apache2
+      - name: python-pip

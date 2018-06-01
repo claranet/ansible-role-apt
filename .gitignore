@@ -1,0 +1,6 @@
+molecule/**/.molecule
+*.pyc
+molecule/**/.pytest_cache
+*.swp
+*.save
+.idea/*
