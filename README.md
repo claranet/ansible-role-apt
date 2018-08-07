@@ -1,5 +1,5 @@
-ansible-role-apt
-================
+apt
+===
 
 Install packages and add repositories on apt based distributions :
 
