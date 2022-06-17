@@ -1,17 +1,32 @@
 ---
+
+- name: Gather OS specific variables
+  ansible.builtin.include_vars: "{{ loop_vars }}"
+  loop: "{{ query('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distro }}-{{ ansible_distro_version }}.yml"
+        - "{{ ansible_distro }}-{{ ansible_distro_release }}.yml"
+        - "{{ ansible_distro }}-{{ ansible_distro_major_version }}.yml"
+        - "{{ ansible_distro }}.yml"
+        - "{{ ansible_os_family|lower }}-family.yml"
+        - "{{ ansible_system | lower }}.yml"
+      paths:
+        - "vars"
+      skip: true
+  loop_control:
+    loop_var: loop_vars
+
 - name: Installing required packages
-  apt:
+  ansible.builtin.apt:
     pkg: "{{ item }}"
     state: present
-  with_items:
-    - apt-transport-https
-    - aptitude
-    - python-apt
-    - python-pycurl
+  loop: "{{ apt_required_packages }}"
   become: true
 
 - name: Adding apt signing key
-  apt_key:
+  ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
     file: "{{ item.file | default(omit) }}"
     data: "{{ item.data | default(omit) }}"
@@ -24,7 +39,7 @@
   become: true
 
 - name: Adding repositories
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default (omit) }}"
     update_cache: true
@@ -33,7 +48,7 @@
   become: true
 
 - name: Upgrading system
-  apt:
+  ansible.builtin.apt:
     upgrade: "{{ apt_upgrade }}"
     update_cache: true
     autoremove: "{{ apt_autoremove }}"
@@ -41,7 +56,7 @@
   become: true
 
 - name: Installing packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ item.name | default(omit) }}"
     deb: "{{ item.deb | default(omit) }}"
     state: present
