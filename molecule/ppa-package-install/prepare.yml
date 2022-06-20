@@ -4,16 +4,17 @@
   gather_facts: false
   tasks:
   - name: add group
-    group:
+    ansible.builtin.group:
       name: ansible
       state: present
   - name: add user
-    user:
+    ansible.builtin.user:
       name: ansible
       group: ansible
       home: /home/ansible
 
-  - lineinfile:
+  - name: Add sudoers for ansible
+    ansible.builtin.lineinfile:
       path: /etc/sudoers
       state: present
       line: 'ansible ALL=(ALL) NOPASSWD: ALL'
