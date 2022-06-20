@@ -3,7 +3,7 @@
   hosts: all
   remote_user: ansible
   roles:
-    - role: ansible-role-apt
+    - role: claranet.apt
   vars:
     apt_upgrade: true
     apt_packages:
