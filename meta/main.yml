@@ -21,7 +21,7 @@ galaxy_info:
         - bullseye
 
   galaxy_tags:
-    - cloudpublic
+    - system
     - apt
     - packages
 
