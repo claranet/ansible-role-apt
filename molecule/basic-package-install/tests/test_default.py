@@ -13,8 +13,9 @@ def test_package(host):
 
 def test_pythonpip(host):
     if host.system_info.distribution == 'debian' and host.system_info.codename == 'bullseye':
-        p = host.package('python3-pip')
-        assert p.is_installed
+        package_name = 'python3-pip'
     else:
-        p = host.package('python-pip')
-        assert p.is_installed
+        package_name = 'python-pip'
+
+    p = host.package(package_name)
+    assert p.is_installed
