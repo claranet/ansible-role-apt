@@ -1,6 +1,6 @@
 ---
 
-apt_required_packages:
+_apt_required_packages:
   - apt-transport-https
   - aptitude
   - python-apt
