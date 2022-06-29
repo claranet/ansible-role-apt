@@ -67,6 +67,7 @@ warn_list:
   - experimental  # all rules tagged as experimental
   - meta-no-info  # meta/main.yml should contain relevant info
   - risky-file-permissions  # File permissions unset or incorrect
+  - fqcn-builtins  # Use FQCN for builtin actions (added to warn to be compatible with old Ansible versions)
 
 skip_list:
   - role-name  # BUG
