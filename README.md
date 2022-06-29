@@ -1,4 +1,3 @@
-apt
 ===
 
 Install packages and add repositories on apt based distributions :
@@ -22,7 +21,6 @@ Name | Type | Description | Default
  apt_install_recommends | boolean | install recommended packages | no
  apt_dpkg_options | string | add dpkg options to apt command | ""
  apt_default_release | string | set pin priorities (like apt -t) | ""
- apt_required_packages | string | packages list OS dependencies | ""
 
 Dependencies
 ------------
