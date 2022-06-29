@@ -1,7 +1,7 @@
 ---
 
 - name: Gather OS specific variables
-  ansible.builtin.include_vars: "{{ loop_vars }}"
+  include_vars: "{{ loop_vars }}"
   loop: "{{ query('first_found', params) }}"
   vars:
     params:
@@ -19,14 +19,14 @@
     loop_var: loop_vars
 
 - name: Installing required packages
-  ansible.builtin.apt:
+  apt:
     pkg: "{{ item }}"
     state: present
   loop: "{{ _apt_required_packages }}"
   become: true
 
 - name: Adding apt signing key
-  ansible.builtin.apt_key:
+  apt_key:
     id: "{{ item.id | default(omit) }}"
     file: "{{ item.file | default(omit) }}"
     data: "{{ item.data | default(omit) }}"
@@ -39,7 +39,7 @@
   become: true
 
 - name: Adding repositories
-  ansible.builtin.apt_repository:
+  apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default (omit) }}"
     update_cache: true
@@ -48,7 +48,7 @@
   become: true
 
 - name: Upgrading system
-  ansible.builtin.apt:
+  apt:
     upgrade: "{{ apt_upgrade }}"
     update_cache: true
     autoremove: "{{ apt_autoremove }}"
@@ -56,7 +56,7 @@
   become: true
 
 - name: Installing packages
-  ansible.builtin.apt:
+  apt:
     name: "{{ item.name | default(omit) }}"
     deb: "{{ item.deb | default(omit) }}"
     state: present

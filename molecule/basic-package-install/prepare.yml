@@ -4,24 +4,24 @@
   gather_facts: true
   tasks:
   - name: add group
-    ansible.builtin.group:
+    group:
       name: ansible
       state: present
 
   - name: add user
-    ansible.builtin.user:
+    user:
       name: ansible
       group: ansible
       home: /home/ansible
 
   - name: Add sudoers for ansible
-    ansible.builtin.lineinfile:
+    lineinfile:
       path: /etc/sudoers
       state: present
       line: 'ansible ALL=(ALL) NOPASSWD: ALL'
 
   - name: Install Python3 for Debian Bullseye  # https://github.com/ansible/ansible/issues/69053
-    ansible.builtin.shell: "apt-get update && apt-get install -y python3"
+    shell: "apt-get update && apt-get install -y python3"
     when:
       - ansible_distribution == "Debian"
       - ansible_distribution_release == "bullseye"
