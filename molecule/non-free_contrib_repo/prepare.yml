@@ -1,7 +1,7 @@
 ---
 - name: Prepare
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
   - name: add group
     group:
@@ -13,7 +13,20 @@
       group: ansible
       home: /home/ansible
 
-  - lineinfile:
+  - name: Add sudoers for ansible
+    lineinfile:
       path: /etc/sudoers
       state: present
       line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+
+  - name: Install Python3 for Debian Bullseye  # https://github.com/ansible/ansible/issues/69053
+    shell: "apt-get update && apt-get install -y python3"
+    when:
+      - ansible_distribution == "Debian"
+      - ansible_distribution_release == "bullseye"
+
+  - name: Install gpg for Debian Bullseye
+    shell: "apt-get update && apt-get install -y gpg"
+    when:
+      - ansible_distribution == "Debian"
+      - ansible_distribution_release == "bullseye"

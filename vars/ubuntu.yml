@@ -1,0 +1,7 @@
+---
+
+_apt_required_packages:
+  - apt-transport-https
+  - aptitude
+  - python-apt
+  - python-pycurl

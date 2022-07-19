@@ -13,7 +13,8 @@
       group: ansible
       home: /home/ansible
 
-  - lineinfile:
+  - name: Add sudoers for ansible
+    lineinfile:
       path: /etc/sudoers
       state: present
       line: 'ansible ALL=(ALL) NOPASSWD: ALL'

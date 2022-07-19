@@ -6,8 +6,8 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 
-def test_rar(host):
-    p = host.package('rar')
+def test_album(host):
+    p = host.package('album')
     assert p.is_installed
 
 

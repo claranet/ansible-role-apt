@@ -1,10 +1,14 @@
 ---
 galaxy_info:
+  role_name: "apt"
+  namespace: "claranet"
   author: Quentin Manfroi <quentin.manfroi@fr.clara.net>
   description: Manage apt keys, repos and packages
-  company: Claranet - Cloud Public
+  company: Claranet
 
   min_ansible_version: 2.3
+
+  license: "MPL2"
 
   platforms:
     - name: Ubuntu
@@ -12,9 +16,12 @@ galaxy_info:
         - all
     - name: Debian
       versions:
-        - all
+        - stretch
+        - buster
+        - bullseye
+
   galaxy_tags:
-    - cloud-public
+    - system
     - apt
     - packages
 

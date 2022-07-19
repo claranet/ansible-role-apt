@@ -9,4 +9,10 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 def test_version(host):
     p = host.package("nginx")
     assert p.is_installed
-    assert p.version.startswith("1.10")
+
+    if host.system_info.distribution == 'debian' and host.system_info.codename == 'stretch':
+        assert p.version.startswith("1.10")
+    elif host.system_info.distribution == 'debian' and host.system_info.codename == 'buster':
+        assert p.version.startswith("1.14")
+    elif host.system_info.distribution == 'debian' and host.system_info.codename == 'bullseye':
+        assert p.version.startswith("1.18")

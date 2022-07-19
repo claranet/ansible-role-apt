@@ -3,18 +3,29 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
+
 platforms:
   - name: debian9
     image: debian:9
+  - name: debian10
+    image: debian:10
+  - name: debian11
+    image: debian:11
+
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
+
 scenario:
   name: minimal
 verifier:
   name: testinfra
   lint:
     name: flake8
+  options:
+    verbose: true
+    s: true
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
