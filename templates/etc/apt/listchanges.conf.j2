@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+[apt]
+confirm=false
+frontend=mail
+email_address={{ aptconfig_.list_changes.mail }}
+save_seen=/var/lib/apt/listchanges.db
+which=news
