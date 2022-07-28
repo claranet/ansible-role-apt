@@ -1,7 +1,7 @@
 ---
 
 - name: Gather OS specific variables
-  include_vars: "{{ loop_vars }}"
+  ansible.builtin.include_vars: "{{ loop_vars }}"
   loop: "{{ query('first_found', params) }}"
   vars:
     params:
@@ -10,7 +10,7 @@
         - "{{ ansible_distro }}-{{ ansible_distro_release }}.yml"
         - "{{ ansible_distro }}-{{ ansible_distro_major_version }}.yml"
         - "{{ ansible_distro }}.yml"
-        - "{{ ansible_os_family|lower }}-family.yml"
+        - "{{ ansible_os_family | lower }}-family.yml"
         - "{{ ansible_system | lower }}.yml"
       paths:
         - "vars"
@@ -19,14 +19,14 @@
     loop_var: loop_vars
 
 - name: Installing required packages
-  apt:
+  ansible.builtin.apt:
     pkg: "{{ item }}"
     state: present
   loop: "{{ _apt_required_packages }}"
   become: true
 
 - name: Adding apt signing key
-  apt_key:
+  ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
     file: "{{ item.file | default(omit) }}"
     data: "{{ item.data | default(omit) }}"
@@ -35,20 +35,20 @@
     url: "{{ item.url | default(omit) }}"
     validate_certs: "{{ item.validate_certs | default(omit) }}"
     state: present
-  with_items: "{{ apt_keys }}"
+  loop: "{{ apt_keys }}"
   become: true
 
 - name: Adding repositories
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default (omit) }}"
     update_cache: true
-  with_items: "{{ apt_repositories }}"
+  loop: "{{ apt_repositories }}"
   when: item.repo is defined
   become: true
 
 - name: Upgrading system
-  apt:
+  ansible.builtin.apt:
     upgrade: "{{ apt_upgrade }}"
     update_cache: true
     autoremove: "{{ apt_autoremove }}"
@@ -56,7 +56,7 @@
   become: true
 
 - name: Installing packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ item.name | default(omit) }}"
     deb: "{{ item.deb | default(omit) }}"
     state: present
@@ -66,5 +66,5 @@
     install_recommends: "{{ apt_install_recommends }}"
     default_release: "{{ apt_default_release | default(omit) }}"
     update_cache: true
-  with_items: "{{ apt_packages }}"
+  loop: "{{ apt_packages }}"
   become: true
