@@ -1,0 +1,24 @@
+// {{ ansible_managed }}
+//
+
+{% set ns = namespace(prev_keys = []) %}
+{% for key, value in aptconfig_.items() recursive %}
+{%   if value is string or value is integer %}
+{{ (ns.prev_keys + [key]) | join('::') }} "{{ value }}";
+{%   elif value is boolean %}
+{{ (ns.prev_keys + [key]) | join('::') }} "{{ value | ternary('true', 'false') }}";
+{#   elif value is list #}{% elif value is iterable and (value is not string and value is not mapping) %}
+#clear {{ (ns.prev_keys + [key]) | join('::') }};
+{{ (ns.prev_keys + [key]) | join('::') }} {
+{%     for value2 in value %}
+  "{{ value2 }}";
+{%     endfor -%}
+};
+{%   elif value is mapping %}
+{%     set ns.prev_keys = ns.prev_keys + [key] %}
+{{     loop(value.items()) }}
+{%     set ns.prev_keys = ns.prev_keys[0:-1] %}
+{%   endif %}
+{% endfor %}
+
+{{ aptconfig_additional_preformatted_config }}
