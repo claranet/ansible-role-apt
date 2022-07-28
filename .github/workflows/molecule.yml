@@ -20,7 +20,7 @@ jobs:
         with:
           command: lint
 
-  test:
+  test-basic-package-install:
     needs:
       - lint
     runs-on: ubuntu-20.04
@@ -48,8 +48,9 @@ jobs:
         with:
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}
+          scenario: "basic-package-install"
 
-  test_secondport:
+  test-minimal:
     needs:
       - lint
     runs-on: ubuntu-20.04
@@ -77,4 +78,124 @@ jobs:
         with:
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}
-          scenario: "secondport"
+          scenario: "minimal"
+
+  test-non-free_contrib_repo:
+    needs:
+      - lint
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - image: "amazonlinux"
+            tag: "latest"
+          - image: "fedora"
+            tag: "28"
+          - image: "debian"
+            tag: "11"
+          - image: "debian"
+            tag: "10"
+          - image: "ubuntu"
+            tag: "20.04"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.17
+        with:
+          image: ${{ matrix.config.image }}
+          tag: ${{ matrix.config.tag }}
+          scenario: "non-free_contrib_repo"
+
+  test-ppa-package-install:
+    needs:
+      - lint
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - image: "amazonlinux"
+            tag: "latest"
+          - image: "fedora"
+            tag: "28"
+          - image: "debian"
+            tag: "11"
+          - image: "debian"
+            tag: "10"
+          - image: "ubuntu"
+            tag: "20.04"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.17
+        with:
+          image: ${{ matrix.config.image }}
+          tag: ${{ matrix.config.tag }}
+          scenario: "ppa-package-install"
+
+  test-repo-package-install:
+    needs:
+      - lint
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - image: "amazonlinux"
+            tag: "latest"
+          - image: "fedora"
+            tag: "28"
+          - image: "debian"
+            tag: "11"
+          - image: "debian"
+            tag: "10"
+          - image: "ubuntu"
+            tag: "20.04"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.17
+        with:
+          image: ${{ matrix.config.image }}
+          tag: ${{ matrix.config.tag }}
+          scenario: "repo-package-install"
+
+  test-spec-version-package-install:
+    needs:
+      - lint
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - image: "amazonlinux"
+            tag: "latest"
+          - image: "fedora"
+            tag: "28"
+          - image: "debian"
+            tag: "11"
+          - image: "debian"
+            tag: "10"
+          - image: "ubuntu"
+            tag: "20.04"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.17
+        with:
+          image: ${{ matrix.config.image }}
+          tag: ${{ matrix.config.tag }}
+          scenario: "spec-version-package-install"
