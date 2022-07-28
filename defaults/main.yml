@@ -17,3 +17,171 @@ apt_force: false
 apt_install_recommends: false
 # Target release (i.e. for backports)
 # apt_default_release: "{{ ansible_distribution_release }}"
+
+aptconfig_listchanges_mail: null
+
+apt_preferences: {}
+
+---
+aptconfig: {}
+aptconfig_default:
+  Acquire:
+    http:
+      Proxy: null
+    https:
+      Proxy: null
+    # Allow the update command to continue downloading data from a repository which changed its information of
+    # the release contained in the repository indicating e.g a new major release
+    AllowReleaseInfoChange:
+      Suite: true
+
+  # https://salsa.debian.org/apt-team/apt/-/blob/main/debian/apt.systemd.daily
+  APT:
+    Periodic:
+      # Enable the update/upgrade script (0=disable)
+      Enable: 0
+      # Backup after n-days if archive contents changed.(0=disable)
+      BackupArchiveInterval: 0
+      # Backup level.(0=disable), 1 is invalid.
+      # (number of backup to keep)
+      BackupLevel: 3
+      # Do "apt-get update" automatically every n-days (0=disable)
+      Update-Package-Lists: 0
+      # Do "apt-get upgrade --download-only" every n-days (0=disable)
+      Download-Upgradeable-Packages: 0
+      # Run the "unattended-upgrade" security upgrade script
+      # every n-days (0=disabled)
+      # Requires the package "unattended-upgrades" and will write
+      # a log in /var/log/unattended-upgrades
+      Unattended-Upgrade: 0
+      # Do "apt-get autoclean" every n-days (0=disable)
+      AutocleanInterval: 0
+      # Do "apt-get clean" every n-days (0=disable)
+      CleanInterval: 0
+
+  # https://github.com/mvo5/unattended-upgrades
+  # https://github.com/mvo5/unattended-upgrades/blob/master/data/50unattended-upgrades.Debian
+  Unattended-Upgrade:
+    Origins-Pattern: >-
+      {%- if ansible_distribution_major_version|int >= 10 -%}
+      [
+      "origin=Debian,codename=${distro_codename},label=Debian-Security",
+      "origin=Debian,codename=${distro_codename}-security,label=Debian-Security"
+      ]
+      {%- else -%}
+      [ 'origin=Debian,codename=${distro_codename},label=Debian-Security' ]
+      {%- endif -%}
+
+    # Python regular expressions, matching packages to exclude from upgrading
+    Package-Blacklist: []
+
+    # This option allows you to control if on a unclean dpkg exit
+    # unattended-upgrades will automatically run
+    #   dpkg --force-confold --configure -a
+    # The default is true, to ensure updates keep getting installed
+    AutoFixInterruptedDpkg: true
+
+    # Split the upgrade into the smallest possible chunks so that
+    # they can be interrupted with SIGTERM. This makes the upgrade
+    # a bit slower but it has the benefit that shutdown while a upgrade
+    # is running is possible (with a small delay)
+    MinimalSteps: true
+
+    # Install all updates when the machine is shutting down
+    # instead of doing it in the background while the machine is running.
+    # This will (obviously) make shutdown slower.
+    # Unattended-upgrades increases logind's InhibitDelayMaxSec to 30s.
+    # This allows more time for unattended-upgrades to shut down gracefully
+    # or even install a few packages in InstallOnShutdown mode, but is still a
+    # big step back from the 30 minutes allowed for InstallOnShutdown previously.
+    # Users enabling InstallOnShutdown mode are advised to increase
+    # InhibitDelayMaxSec even further, possibly to 30 minutes.
+    InstallOnShutdown: false
+
+    # Send email to this address for problems or packages upgrades
+    # If empty or unset then no email is sent, make sure that you
+    # have a working mail setup on your system. A package that provides
+    # 'mailx' must be installed. E.g. "user@example.com"
+    Mail: null
+
+    # Set this value to one of:
+    #    "always", "only-on-error" or "on-change"
+    MailReport: on-change
+
+    # Remove unused automatically installed kernel-related packages
+    # (kernel images, kernel headers and kernel version locked tools).
+    Remove-Unused-Kernel-Packages: true
+
+    # Do automatic removal of newly unused dependencies after the upgrade
+    Remove-New-Unused-Dependencies: false
+
+    # Do automatic removal of unused packages after the upgrade
+    # (equivalent to apt-get autoremove)
+    Remove-Unused-Dependencies: false
+
+    # Automatically reboot *WITHOUT CONFIRMATION* if
+    #  the file /var/run/reboot-required is found after the upgrade
+    Automatic-Reboot: false
+
+    # Automatically reboot even if there are users currently logged in
+    # when Unattended-Upgrade::Automatic-Reboot is set to true
+    Automatic-Reboot-WithUsers: true
+
+    # If automatic reboot is enabled and needed, reboot at the specific
+    # time instead of immediately
+    #  Default: "now"
+    Automatic-Reboot-Time: now
+
+    # Set the days of the week that updates should be applied. The days can be specified as localized abbreviated or full names.
+    # Or as integers where "0" is Sunday, "1" is Monday etc.
+    # Example - apply updates only on Monday and Friday:
+    # Update-Days: ["Mon", "Fri"]
+    Update-Days: []
+
+    # Do upgrade application even if it requires restart after upgrade
+    # i.e. "XB-Upgrade-Requires: app-restart" is set in the debian/control file
+    IgnoreAppsRequireRestart: false
+
+    # Enable logging to syslog. Default is False
+    SyslogEnable: false
+
+    # Specify syslog facility. Default is daemon
+    SyslogFacility: daemon
+
+    # Download and install upgrades only on AC power
+    # (i.e. skip or gracefully stop updates on battery)
+    OnlyOnACPower: false
+
+    # Download and install upgrades only on non-metered connection
+    # (i.e. skip or gracefully stop updates on a metered connection)
+    Skip-Updates-On-Metered-Connections: true
+
+    # Verbose logging
+    Verbose: false
+
+    # Print debugging information both in unattended-upgrades and
+    # in unattended-upgrade-shutdown
+    Debug: false
+
+    # Allow package downgrade if Pin-Priority exceeds 1000
+    Allow-downgrade: false
+
+    # When APT fails to mark a package to be upgraded or installed try adjusting
+    # candidates of related packages to help APT's resolver in finding a solution
+    # where the package can be upgraded or installed.
+    # This is a workaround until APT's resolver is fixed to always find a
+    # solution if it exists. (See Debian bug #711128.)
+    # The fallback is enabled by default, except on Debian's sid release because
+    # uninstallable packages are frequent there.
+    # Disabling the fallback speeds up unattended-upgrades when there are
+    # uninstallable packages at the expense of rarely keeping back packages which
+    # could be upgraded or installed.
+    Allow-APT-Mark-Fallback: true
+
+aptconfig_additional_preformatted_config: ''
+
+aptconfig_listchanges_mail: null
+
+aptconfig_unattended_upgrades_package_state: 'auto'
+aptconfig_unattended_upgrades_timer_override: null
+aptconfig_apt_listchanges_package_state: 'auto'
