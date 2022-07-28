@@ -18,6 +18,26 @@
   loop_control:
     loop_var: loop_vars
 
+- name: /etc/apt/apt.conf.d/99ansible
+  ansible.builtin.template:
+    src: etc/apt/apt.conf.d/99ansible
+    dest: /etc/apt/apt.conf.d/99ansible
+    mode: 0444
+
+- name: Configuration of APT change
+  ansible.builtin.template:
+    src: etc/apt/listchanges.conf.j2
+    dest: /etc/apt/listchanges.conf
+    mode: 0444
+  when: aptconfig_listchanges_mail is not none
+
+- name: Apply APT preferences
+  ansible.builtin.template:
+    src: "preferences.j2"
+    dest: /etc/apt/preferences.d/preferences
+    mode: 0644
+  when: apt_preferences is defined
+
 - name: Installing required packages
   ansible.builtin.apt:
     pkg: "{{ item }}"
