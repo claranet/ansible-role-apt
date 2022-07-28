@@ -9,6 +9,7 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
   lint:
+    name: Lint
     runs-on: ubuntu-20.04
     steps:
       - name: checkout
@@ -20,133 +21,36 @@ jobs:
         with:
           command: lint
 
-  test-basic-package-install:
-    needs:
-      - lint
+  setup:
+    name: Setup scenarios matrix
     runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - image: "amazonlinux"
-            tag: "latest"
-          - image: "fedora"
-            tag: "28"
-          - image: "debian"
-            tag: "11"
-          - image: "debian"
-            tag: "10"
-          - image: "ubuntu"
-            tag: "20.04"
+    outputs:
+      scenarios: ${{ steps.matrix.outputs.scenarios }}
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: molecule
-        uses: robertdebock/molecule-action@2.6.17
-        with:
-          image: ${{ matrix.config.image }}
-          tag: ${{ matrix.config.tag }}
-          scenario: "basic-package-install"
+      - uses: actions/checkout@v3
+      - id: matrix
+        run: |
+          JSON="["
 
-  test-minimal:
-    needs:
-      - lint
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - image: "amazonlinux"
-            tag: "latest"
-          - image: "fedora"
-            tag: "28"
-          - image: "debian"
-            tag: "11"
-          - image: "debian"
-            tag: "10"
-          - image: "ubuntu"
-            tag: "20.04"
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: molecule
-        uses: robertdebock/molecule-action@2.6.17
-        with:
-          image: ${{ matrix.config.image }}
-          tag: ${{ matrix.config.tag }}
-          scenario: "minimal"
+          for s in $(find molecule -mindepth 1 -maxdepth 1 -type d -exec basename "{}" \;); do
+            JSON="${JSON}\"${s}\","
+          done
 
-  test-non-free_contrib_repo:
-    needs:
-      - lint
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - image: "amazonlinux"
-            tag: "latest"
-          - image: "fedora"
-            tag: "28"
-          - image: "debian"
-            tag: "11"
-          - image: "debian"
-            tag: "10"
-          - image: "ubuntu"
-            tag: "20.04"
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: molecule
-        uses: robertdebock/molecule-action@2.6.17
-        with:
-          image: ${{ matrix.config.image }}
-          tag: ${{ matrix.config.tag }}
-          scenario: "non-free_contrib_repo"
+          JSON="${JSON%?}"
+          JSON="$JSON]"
 
-  test-ppa-package-install:
-    needs:
-      - lint
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - image: "amazonlinux"
-            tag: "latest"
-          - image: "fedora"
-            tag: "28"
-          - image: "debian"
-            tag: "11"
-          - image: "debian"
-            tag: "10"
-          - image: "ubuntu"
-            tag: "20.04"
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: molecule
-        uses: robertdebock/molecule-action@2.6.17
-        with:
-          image: ${{ matrix.config.image }}
-          tag: ${{ matrix.config.tag }}
-          scenario: "ppa-package-install"
+          echo "::set-output name=scenarios::$(echo $JSON)"
 
-  test-repo-package-install:
+  test:
+    name: Scenario "${{ matrix.scenario }}" on ${{ matrix.config.image }}:${{ matrix.config.tag }}
     needs:
       - lint
+      - setup
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
+        scenario: ${{ fromJson(needs.setup.outputs.scenarios) }}
         config:
           - image: "amazonlinux"
             tag: "latest"
@@ -158,36 +62,7 @@ jobs:
             tag: "10"
           - image: "ubuntu"
             tag: "20.04"
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: molecule
-        uses: robertdebock/molecule-action@2.6.17
-        with:
-          image: ${{ matrix.config.image }}
-          tag: ${{ matrix.config.tag }}
-          scenario: "repo-package-install"
 
-  test-spec-version-package-install:
-    needs:
-      - lint
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - image: "amazonlinux"
-            tag: "latest"
-          - image: "fedora"
-            tag: "28"
-          - image: "debian"
-            tag: "11"
-          - image: "debian"
-            tag: "10"
-          - image: "ubuntu"
-            tag: "20.04"
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -198,4 +73,4 @@ jobs:
         with:
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}
-          scenario: "spec-version-package-install"
+          scenario: ${{ matrix.scenario }}
