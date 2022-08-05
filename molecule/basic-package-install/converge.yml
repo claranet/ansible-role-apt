@@ -1,7 +1,6 @@
 ---
 - name: basic-package-install
   hosts: all
-  remote_user: ansible
   roles:
     - role: claranet.apt
       vars:

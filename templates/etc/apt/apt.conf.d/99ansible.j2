@@ -2,7 +2,7 @@
 //
 
 {% set ns = namespace(prev_keys = []) %}
-{% for key, value in aptconfig_.items() recursive %}
+{% for key, value in aptconfig_default.items() recursive %}
 {%   if value is string or value is integer %}
 {{ (ns.prev_keys + [key]) | join('::') }} "{{ value }}";
 {%   elif value is boolean %}

@@ -20,7 +20,7 @@
 
 - name: /etc/apt/apt.conf.d/99ansible
   ansible.builtin.template:
-    src: etc/apt/apt.conf.d/99ansible
+    src: etc/apt/apt.conf.d/99ansible.j2
     dest: /etc/apt/apt.conf.d/99ansible
     mode: 0444
 
