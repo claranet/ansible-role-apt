@@ -36,7 +36,7 @@
     src: "preferences.j2"
     dest: /etc/apt/preferences.d/preferences
     mode: 0644
-  when: apt_preferences is defined
+  when: "apt_preferences | length > 0"
 
 - name: Installing required packages
   ansible.builtin.apt:
