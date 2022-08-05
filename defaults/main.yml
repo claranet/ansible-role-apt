@@ -59,13 +59,13 @@ aptconfig_default:
   # https://github.com/mvo5/unattended-upgrades/blob/master/data/50unattended-upgrades.Debian
   Unattended-Upgrade:
     Origins-Pattern: >-
-      {%- if ansible_distribution_major_version|int >= 10 -%}
+      {%- if ansible_distribution_major_version | int >= 10 -%}
       [
-      "origin=Debian,codename=${distro_codename},label=Debian-Security",
-      "origin=Debian,codename=${distro_codename}-security,label=Debian-Security"
+      "origin=Debian,codename={{ ansible_distribution_release }},label=Debian-Security",
+      "origin=Debian,codename={{ ansible_distribution_release }}-security,label=Debian-Security"
       ]
       {%- else -%}
-      [ 'origin=Debian,codename=${distro_codename},label=Debian-Security' ]
+      [ 'origin=Debian,codename={{ ansible_distribution_release }},label=Debian-Security' ]
       {%- endif -%}
 
     # Python regular expressions, matching packages to exclude from upgrading
