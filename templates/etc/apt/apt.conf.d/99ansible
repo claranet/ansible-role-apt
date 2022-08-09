@@ -1,16 +1,14 @@
 // {{ ansible_managed }}
 //
-
 {% set ns = namespace(prev_keys = []) %}
 {% for key, value in aptconfig_.items() recursive %}
-{{ value }}
 {%   if value is string or value is integer %}
-{{ (ns.prev_keys + [key]) | map("string") |join('::') }} "{{ value }}";
+{{ (ns.prev_keys + [key]) | join('::') }} "{{ value | string }}";
 {%   elif value is boolean %}
-{{ (ns.prev_keys + [key]) | map("string") | join('::') }} "{{ value | ternary('true', 'false') }}";
+{{ (ns.prev_keys + [key]) | join('::') }} "{{ value | ternary('true', 'false') }}";
 {#   elif value is list #}{% elif value is iterable and (value is not string and value is not mapping) %}
-#clear {{ (ns.prev_keys + [key]) | map("string") | join('::') }};
-{{ (ns.prev_keys + [key]) | map("string") | join('::') }} {
+#clear {{ (ns.prev_keys + [key]) | join('::') }};
+{{ (ns.prev_keys + [key]) | join('::') }} {
 {%     for value2 in value %}
   "{{ value2 }}";
 {%     endfor -%}
