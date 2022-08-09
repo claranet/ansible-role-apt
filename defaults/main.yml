@@ -19,7 +19,7 @@ apt_install_recommends: false
 # apt_default_release: "{{ ansible_distribution_release }}"
 
 apt_preferences: {}
-
+aptconfig: {}
 aptconfig_default:
   Acquire:
     http:
@@ -174,7 +174,7 @@ aptconfig_default:
     # could be upgraded or installed.
     Allow-APT-Mark-Fallback: true
 
-aptconfig_additional_preformatted_config: ""
+aptconfig_additional_preformatted_config: ''
 
 aptconfig_listchanges_mail: null
 

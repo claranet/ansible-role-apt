@@ -1,5 +1,3 @@
-// {{ ansible_managed }}
-//
 
 {% set ns = namespace(prev_keys = []) %}
 {% for key, value in aptconfig_default.items() recursive %}
@@ -21,4 +19,4 @@
 {%   endif %}
 {% endfor %}
 
-{{ aptconfig_additional_preformatted_config }}
+"{{ aptconfig_additional_preformatted_config }}"
