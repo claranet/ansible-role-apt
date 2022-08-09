@@ -1,7 +1,7 @@
 ---
 - name: ppa-package-install
   hosts: all
-  remote_user: ansible
+  become: true
   roles:
     - role: claranet.apt
   vars:

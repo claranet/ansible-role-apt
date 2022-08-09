@@ -22,8 +22,8 @@
   ansible.builtin.file:
     path: "/{{ item.path }}"
     state: directory
-  with_filetree:
-    - "../templates"
+    mode: '0755'
+  with_filetree: "{{ ['../templates'] }}"  # noqa: schema
   when: item.state == "directory"
 
 - name: Ensure files are populated from templates
@@ -31,8 +31,7 @@
     src: "{{ item.src }}"
     dest: "/{{ item.path }}"
     mode: '0444'
-  with_filetree:
-    - "../templates"
+  with_filetree: "{{ ['../templates'] }}"  # noqa: schema
   when: item.state == "file"
 
 - name: Installing required packages

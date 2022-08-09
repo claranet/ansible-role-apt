@@ -1,17 +1,16 @@
 ---
 - name: non-free-contrib-repo
-  remote_user: ansible
   hosts: all
+  become: true
   roles:
     - role: claranet.apt
-  vars:
-    apt_upgrade: true
-    apt_packages:
-      - name: java-package
-      - name: album
-
-    apt_repositories:
-      # contrib repo
-      - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
-      # non-free repo
-      - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} non-free
+      vars:
+        apt_upgrade: true
+        apt_packages:
+          - name: java-package
+          - name: album
+        apt_repositories:
+          # contrib repo
+          - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
+          # non-free repo
+          - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} non-free

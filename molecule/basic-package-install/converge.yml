@@ -1,6 +1,7 @@
 ---
 - name: basic-package-install
   hosts: all
+  become: true
   roles:
     - role: claranet.apt
       vars:
