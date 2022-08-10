@@ -5,3 +5,4 @@ _apt_required_packages:
   - aptitude
   - python-apt
   - python-pycurl
+  - gpg
