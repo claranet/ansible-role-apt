@@ -1,19 +1,11 @@
 ---
-# upgrade system: safe | full | dist
 apt_upgrade: false
-# remove packages that are no longer needed for dependencies
 apt_autoremove: true
-# packages to install
 apt_packages: []
-# repositories to register
 apt_repositories: []
-# gpg keys for external repositories
 apt_keys: []
-# Force install
 apt_force: false
-# Add dpkg options to apt command
-# apt_dpkg_options: "force-confdef,force-confold"
-# Automatically install recommended packages
+
 apt_install_recommends: false
 # Target release (i.e. for backports)
 # apt_default_release: "{{ ansible_distribution_release }}"

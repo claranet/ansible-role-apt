@@ -1,7 +1,7 @@
 # Ansible role - apt
 [![Maintainer](https://img.shields.io/badge/maintained%20by-claranet-e00000?style=flat-square)](https://www.claranet.fr/)
 [![License](https://img.shields.io/github/license/claranet/ansible-role-apt?style=flat-square)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/claranet/ansible-role-apt?style=flat-square)](https://github.com/claranet/ansible-role-apt/releases)
+[![Release](https://img.shields.io/github/v/release/claranet/ansible-role-apt?style=flat-square)](https://github.com/claranet/ansible-role-aot/releases)
 [![Status](https://img.shields.io/github/workflow/status/claranet/ansible-role-apt/Ansible%20Molecule?style=flat-square&label=tests)](https://github.com/claranet/ansible-role-apt/actions?query=workflow%3A%22Ansible+Molecule%22)
 [![Ansible version](https://img.shields.io/badge/ansible-%3E%3D2.10-black.svg?style=flat-square&logo=ansible)](https://github.com/ansible/ansible)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible-galaxy-black.svg?style=flat-square&logo=ansible)](https://galaxy.ansible.com/claranet/apt)
@@ -22,17 +22,18 @@ ansible-galaxy install claranet.apt
 ## :gear: Role variables
 --------------
 
-Name | Type | Description | Default
+Variable | Default value | Description
 ---------|----------|---------|---------
- apt_packages | list | packages list to install | []
- apt_repositories | list | repositories list to configure | []
- apt_keys | list | keys list to use with repositories | []
- apt_upgrade | string | do an upgrade (no, yes, safe, full, dist) | no
- apt_force | boolean | force installs / removes | no
- apt_autoremove | boolean | remove unused dependency packages | yes
- apt_install_recommends | boolean | install recommended packages | no
- apt_dpkg_options | string | add dpkg options to apt command | ""
- apt_default_release | string | set pin priorities (like apt -t) | ""
+apt_upgrade                  | **false**   | do an upgrade (no, yes, safe, full, dist)
+apt_autoremove               | **true**    | remove packages that are no longer needed for dependencies
+apt_packages                 | **[]**      | packages list to install
+apt_repositories             | **[]**      | repositories list to configure
+apt_keys                     | **[]**      | keys list to use with external repositories
+apt_force                    | **false**   | force installs / removes
+apt_install_recommends       | **false**   | install recommended packages
+apt_dpkg_options             | **""**      | add dpkg options to apt command
+apt_default_release          | **""**      | set pin priorities (like apt -t)
+aptconfig_default            | **{}**      | Hash of apt options
 
 ## :arrows_counterclockwise: Dependencies
 
@@ -102,40 +103,6 @@ Do an upgrade
         # could be safe | full | dist
         - apt_upgrade: yes
 ```
-
-All these examples could be combined in one playbook
-
-
-Testing
--------
-
-###How to use it
-
-Testing uses Molecule : https://molecule.readthedocs.io/en/latest/
-```
-cd ansible-role-apt
-molecule test -s name_of_scenario
-
-```
-
-###Scenarios created for ansible-role-apt
-
-- basic-package-install : to check if the role has successfully installed the simple/with dependencies package .
-- non-free_contrib_repo : to check if the role has successfully installed the package from a non-free and contrib repository also a dotdeb key and repo .
-- ppa-package-install   : to check if the role has successfully installed the package from a ppa repo .
-- repo-package-install  : to check if the role has successfully installed the package from a custom repository ( zabbix ) .
-- spec-version-package-install : to check if the role has successfully installed the package with a specific version .
-
-Molecule test this role on these docker images :
-------------------------------------------------
-
-- Debian 9
-- Debian 10
-- Debian 11
-- Ubuntu 14.04
-- Ubuntu 16.04
-- Ubuntu 18.04
-
 
 ## :closed_lock_with_key: [Hardening](HARDENING.md)
 
