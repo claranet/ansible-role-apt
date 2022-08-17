@@ -22,18 +22,18 @@ ansible-galaxy install claranet.apt
 ## :gear: Role variables
 --------------
 
-Variable | Default value | Description
----------|----------|---------|---------
-apt_upgrade                  | **false**   | do an upgrade (no, yes, safe, full, dist)
-apt_autoremove               | **true**    | remove packages that are no longer needed for dependencies
-apt_packages                 | **[]**      | packages list to install
-apt_repositories             | **[]**      | repositories list to configure
-apt_keys                     | **[]**      | keys list to use with external repositories
-apt_force                    | **false**   | force installs / removes
-apt_install_recommends       | **false**   | install recommended packages
-apt_dpkg_options             | **""**      | add dpkg options to apt command
-apt_default_release          | **""**      | set pin priorities (like apt -t)
-aptconfig_default            | **defaults/mail.yml**      | Hash of apt options
+Variable                     | Default value         | Description
+-----------------------------|-----------------------|-----------------------------------------------------------
+apt_upgrade                  | **false**             | do an upgrade (no, yes, safe, full, dist)
+apt_autoremove               | **true**              | remove packages that are no longer needed for dependencies
+apt_packages                 | **[]**                | packages list to install
+apt_repositories             | **[]**                | repositories list to configure
+apt_keys                     | **[]**                | keys list to use with external repositories
+apt_force                    | **false**             | force installs / removes
+apt_install_recommends       | **false**             | install recommended packages
+apt_dpkg_options             | **""**                | add dpkg options to apt command
+apt_default_release          | **""**                | set pin priorities (like apt -t)
+aptconfig_default            | **defaults/mail.yml** | Hash of apt options
 
 ## :arrows_counterclockwise: Dependencies
 
