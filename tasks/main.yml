@@ -17,13 +17,14 @@
   when: item.state == "file"
 
 - name: Installing required packages
+  become: true
   ansible.builtin.apt:
     pkg: "{{ item }}"
     state: present
   loop: "{{ _apt_required_packages }}"
-  become: true
 
 - name: Adding apt signing key
+  become: true
   ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
     file: "{{ item.file | default(omit) }}"
@@ -34,26 +35,26 @@
     validate_certs: "{{ item.validate_certs | default(omit) }}"
     state: present
   loop: "{{ apt_keys }}"
-  become: true
 
 - name: Adding repositories
+  become: true
   ansible.builtin.apt_repository:
     repo: "{{ item.repo }}"
-    codename: "{{ item.codename | default (omit) }}"
+    codename: "{{ item.codename | default(omit) }}"
     update_cache: true
   loop: "{{ apt_repositories }}"
   when: item.repo is defined
-  become: true
 
 - name: Upgrading system
+  become: true
   ansible.builtin.apt:
     upgrade: "{{ apt_upgrade }}"
     update_cache: true
     autoremove: "{{ apt_autoremove }}"
   when: apt_upgrade
-  become: true
 
 - name: Installing packages
+  become: true
   ansible.builtin.apt:
     name: "{{ item.name | default(omit) }}"
     deb: "{{ item.deb | default(omit) }}"
@@ -65,4 +66,3 @@
     default_release: "{{ apt_default_release | default(omit) }}"
     update_cache: true
   loop: "{{ apt_packages }}"
-  become: true

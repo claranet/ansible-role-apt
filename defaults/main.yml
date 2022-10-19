@@ -11,8 +11,8 @@ apt_install_recommends: false
 # apt_default_release: "{{ ansible_distribution_release }}"
 
 apt_preferences: {}
-aptconfig: {}
-aptconfig_default:
+apt_config: {}
+apt_config_default:
   Acquire:
     http:
       Proxy: null
@@ -166,10 +166,10 @@ aptconfig_default:
     # could be upgraded or installed.
     Allow-APT-Mark-Fallback: true
 
-aptconfig_additional_preformatted_config: ''
+apt_config_additional_preformatted_config: ''
 
-aptconfig_listchanges_mail: null
+apt_config_listchanges_mail: null
 
-aptconfig_unattended_upgrades_package_state: 'auto'
-aptconfig_unattended_upgrades_timer_override: null
-aptconfig_apt_listchanges_package_state: 'auto'
+apt_config_unattended_upgrades_package_state: 'auto'
+apt_config_unattended_upgrades_timer_override: null
+apt_config_listchanges_package_state: 'auto'

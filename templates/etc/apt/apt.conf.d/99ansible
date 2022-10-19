@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 //
 {% set ns = namespace(prev_keys = []) %}
-{% for key, value in _aptconfig_.items() recursive %}
+{% for key, value in _apt_config_.items() recursive %}
 {%   if value is string or value is integer %}
 {{ (ns.prev_keys + [key]) | join('::') }} "{{ value | string }}";
 {%   elif value is boolean %}
@@ -20,4 +20,4 @@
 {%   endif %}
 {% endfor %}
 
-{{ aptconfig_additional_preformatted_config }}
+{{ apt_config_additional_preformatted_config }}
