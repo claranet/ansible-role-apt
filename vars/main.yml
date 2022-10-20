@@ -1,6 +1,6 @@
 ---
 
-_aptconfig_: "{{ aptconfig_default | combine(aptconfig, recursive=True) }}"
+_apt_config_: "{{ apt_config_default | combine(apt_config, recursive=True) }}"
 
 _apt_python: python{{ "3" if ansible_python.version.major == 3 else "" }}
 
