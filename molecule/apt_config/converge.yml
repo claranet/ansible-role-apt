@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: claranet.apt
+      vars:
+        apt_config:
+          APT:
+            Periodic:
+              Enable: 1
+              Update-Package-Lists: 1
+              Unattended-Upgrade: 1
+              AutocleanInterval: 7
+        apt_config_unattended_upgrades_timer_override: |
+          [Timer]
+          OnCalendar=
+          OnCalendar=*-*-* 22:00
+          RandomizedDelaySec=10m
