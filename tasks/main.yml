@@ -66,3 +66,24 @@
     default_release: "{{ apt_default_release | default(omit) }}"
     update_cache: true
   loop: "{{ apt_packages }}"
+
+- name: Package unattended-upgrades
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: >-
+      {%- if apt_config_unattended_upgrades_package_state == 'auto' -%}
+      {{- (_apt_config_.APT.Periodic['Unattended-Upgrade'] == 1) | ternary('present', 'absent') -}}
+      {%- else -%}
+      {{- apt_config_unattended_upgrades_package_state -}}
+      {%- endif -%}
+    cache_valid_time: 3600
+
+- name: Package apt-listchanges
+  ansible.builtin.apt:
+    name: apt-listchanges
+    state: >-
+      {%- if apt_config_listchanges_package_state == 'auto' -%}
+      {{- (apt_config_listchanges_mail is not none) | ternary('present', 'absent') -}}
+      {%- else -%}
+      {{- apt_config_listchanges_package_state -}}
+      {%- endif -%}
