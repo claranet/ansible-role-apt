@@ -9,5 +9,3 @@
         apt_packages:
           - name: apache2
           - name: "{{ ( ansible_distribution + '-' + ansible_distribution_release == 'Debian-bullseye' ) | ternary('python3-pip', 'python-pip') }}"
-        repositories:
-          - update_cache: true
