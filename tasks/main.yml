@@ -21,6 +21,7 @@
   ansible.builtin.apt:
     pkg: "{{ item }}"
     state: present
+    update_cache: true
   loop: "{{ _apt_required_packages }}"
 
 - name: Adding apt signing key
