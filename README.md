@@ -22,19 +22,24 @@ ansible-galaxy install claranet.apt
 ## :gear: Role variables
 --------------
 
-Variable                     | Default value                              | Description
------------------------------|--------------------------------------------|--------------------------------------
-apt_upgrade                  | **false**                                  | Do an upgrade (no, yes, safe, full, dist)
-apt_autoremove               | **true**                                   | Remove packages that are no longer needed for dependencies
-apt_packages                 | **[]**                                     | Packages list to install
-apt_repositories             | **[]**                                     | Repositories list to configure
-apt_keys                     | **[]**                                     | Keys list to use with external repositories
-apt_force                    | **false**                                  | Force installs / removes
-apt_install_recommends       | **false**                                  | Install recommended packages
-apt_dpkg_options             | **""**                                     | Add dpkg options to apt command
-apt_default_release          | **""**                                     | Set pin priorities (like apt -t)
-aptconfig_default            | **[defaults/main.yml](defaults/main.yml)** | Hash of apt options
-
+Variable                                      | Default value                               | Description
+----------------------------------------------|---------------------------------------------|--------------------------------------
+apt_upgrade                                   | **false**                                   | Do an upgrade (no, yes, safe, full, dist)
+apt_autoremove                                | **true**                                    | Remove packages that are no longer needed for dependencies
+apt_packages                                  | **[]**                                      | Packages list to install
+apt_repositories                              | **[]**                                      | Repositories list to configure
+apt_keys                                      | **[]**                                      | Keys list to use with external repositories
+apt_force                                     | **false**                                   | Force installs / removes
+apt_install_recommends                        | **false**                                   | Install recommended packages
+apt_dpkg_options                              | **""**                                      | Add dpkg options to apt command
+apt_default_release                           | **""**                                      | Set pin priorities (like apt -t)
+apt_config_default                            | **[defaults/main.yml](defaults/main.yml)**  | Defaut config for apt, every new config will be merge with it
+apt_config                                    | **{}**                                      | New config to set, it will be merge with apt_default_config
+apt_config_additional_preformatted_config     | **''**                                      | Additional preformatted config
+apt_config_listchanges_mail                   | **null**                                    | List changes mail
+apt_config_unattended_upgrades_package_state  | **'auto'**                                  | Unattended upgrades package state
+apt_config_unattended_upgrades_timer_override | **null**                                    | Unattended upgrades timer override
+apt_config_listchanges_package_state          | **'auto'**                                  | List changes package state
 ## :arrows_counterclockwise: Dependencies
 
 N/A
