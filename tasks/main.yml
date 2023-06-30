@@ -47,10 +47,6 @@
     - item.key is defined
     - item.key is url
 
-- name: "Lookup "
-  ansible.builtin.debug:
-    msg: "{{ lookup('ansible.builtin.template', 'etc/apt/sources.list.d/99ansible.sources') }}"
-
 - name: Adding apt signing key
   ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
