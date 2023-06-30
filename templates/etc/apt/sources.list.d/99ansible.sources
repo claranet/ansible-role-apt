@@ -18,7 +18,7 @@ Components: {{ repositories.components | join(' ') if repositories.components is
 Architectures: {{ repositories.architectures | join(' ') if repositories.architectures is not string else repositories.architectures }}
 {% endif %}
 {% if repositories.key is defined %}
-Signed-By: "{{ '/usr/share/keyrings/' + ((repositories.key | urlsplit('path') | regex_replace('/|_', '')) if repositories.key is url else repositories.key) }}"
+Signed-By: {{ '/usr/share/keyrings/' + ((repositories.key | urlsplit('path') | regex_replace('/|_', '')) if repositories.key is url else repositories.key) }}
 {% endif %}
 
 {% endfor %}
