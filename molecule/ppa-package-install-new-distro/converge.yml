@@ -1,0 +1,19 @@
+---
+- name: ppa-package-install
+  hosts: all
+  become: true
+  roles:
+    - role: claranet.apt
+  vars:
+    apt_upgrade: true
+    apt_packages:
+      - name: nginx
+      - name: nodejs
+    apt_repositories_new:
+      - types:
+          - deb
+          - deb-src
+        urls: "https://deb.nodesource.com/node_18.x"
+        suites: "{{ ansible_distribution_release|lower }}"
+        components: "main"
+        key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
