@@ -15,5 +15,5 @@
     apt_repositories:
       - repo: ppa:nginx/stable
         codename: trusty
-      - repo: "deb https://deb.nodesource.com/node_10.x {{ ansible_distribution_release|lower }} main"
-      - repo: "deb-src https://deb.nodesource.com/node_10.x {{ ansible_distribution_release|lower }} main"
+      - repo: "deb https://deb.nodesource.com/node_18.x {{ ansible_distribution_release|lower }} main"
+      - repo: "deb-src https://deb.nodesource.com/node_18.x {{ ansible_distribution_release|lower }} main"
