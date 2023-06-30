@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+
+{% for repositories in apt_repositories_new %}
+
+{% if repositories.types is defined %}
+Types: {{ repositories.types | join(' ') if repositories.types is not string else repositories.types }}
+{% endif %}
+{% if repositories.urls is defined %}
+URIs: {{ repositories.urls | join(' ') if repositories.urls is not string else repositories.urls }}
+{% endif %}
+{% if repositories.suites is defined %}
+Suites: {{ repositories.suites | join(' ') if repositories.suites is not string else repositories.suites }}
+{% endif %}
+{% if repositories.components is defined %}
+Components: {{ repositories.components | join(' ') if repositories.components is not string else repositories.components }}
+{% endif %}
+{% if repositories.architectures is defined %}
+Architectures: {{ repositories.architectures | join(' ') if repositories.architectures is not string else repositories.architectures }}
+{% endif %}
+{% if repositories.key is defined %}
+Signed-By: "{{ '/usr/share/keyrings/' + ((repositories.key | urlsplit('path') | regex_replace('/|_', '')) if repositories.key is url else repositories.key) }}"
+{% endif %}
+
+{% endfor %}
