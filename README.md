@@ -28,6 +28,7 @@ apt_upgrade                                   | **false**                       
 apt_autoremove                                | **true**                                    | Remove packages that are no longer needed for dependencies
 apt_packages                                  | **[]**                                      | Packages list to install
 apt_repositories                              | **[]**                                      | Repositories list to configure
+apt_repositories_new                          | **[]**                                      | Repositories list to configure for new distributions
 apt_keys                                      | **[]**                                      | Keys list to use with external repositories
 apt_force                                     | **false**                                   | Force installs / removes
 apt_install_recommends                        | **false**                                   | Install recommended packages
@@ -95,13 +96,35 @@ Add repositories and install packages from those
     - apt
 ```
 
+```yaml
+- name: ppa-package-install
+  hosts: all
+  become: true
+  roles:
+    - role: claranet.apt
+  vars:
+    apt_upgrade: true
+    apt_packages:
+      - name: nginx
+      - name: nodejs
+    apt_repositories_new:
+      - types:
+          - deb
+          - deb-src
+        urls: "https://deb.nodesource.com/node_18.x"
+        suites: "{{ ansible_distribution_release|lower }}"
+        components: "main"
+        key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+```
+
 Do an upgrade
 
 ```yaml
 - hosts: all
   vars:
     # could be safe | full | dist
-    - apt_upgrade: yes
+    - apt_upgrade: true
   roles:
     - apt
 ```
