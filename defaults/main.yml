@@ -3,6 +3,7 @@ apt_upgrade: false
 apt_autoremove: true
 apt_packages: []
 apt_repositories: []
+apt_repositories_new: []
 apt_keys: []
 apt_force: false
 

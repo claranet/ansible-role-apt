@@ -1,4 +1,10 @@
 ---
+- name: Installing required packages
+  ansible.builtin.apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ _apt_required_packages }}"
 
 - name: Ensure directory structure exists
   ansible.builtin.file:
@@ -14,18 +20,38 @@
     dest: "/{{ item.path }}"
     mode: '0444'
   with_filetree: "{{ ['../templates'] }}"  # noqa: schema
-  when: item.state == "file"
+  when:
+    - item.state == "file"
+    - item.path != "etc/apt/sources.list.d/99ansible.sources"
 
-- name: Installing required packages
-  become: true
-  ansible.builtin.apt:
-    pkg: "{{ item }}"
-    state: present
-    update_cache: true
-  loop: "{{ _apt_required_packages }}"
+- name: "Download apt keys"
+  ansible.builtin.get_url:
+    url: "{{ item.key }}"
+    dest: "/usr/share/keyrings/{{ item.key | urlsplit('path') | regex_replace('/|_', '') }}"
+    mode: "0664"
+    validate_certs: "{{ item.key.validate_certs | default(false) }}"
+  loop: "{{ apt_repositories_new }}"
+
+- name: "Generate gpg keys"
+  ansible.builtin.command:
+    cmd: "gpg --dearmor /usr/share/keyrings/{{ item.key | urlsplit('path') | regex_replace('/|_', '') }}"
+    creates: "/usr/share/keyrings/{{ item.key | urlsplit('path') | regex_replace('/|_', '') }}"
+    chdir: "/usr/share/keyrings"
+  register: _apt_generate_gpt_keys
+  loop: "{{ apt_repositories_new }}"
+  changed_when: _apt_generate_gpt_keys.rc != 0
+  when:
+    - not apt_repositories
+    - not apt_keys
+    - apt_repositories_new
+    - item.key is defined
+    - item.key is url
+
+- name: "Lookup "
+  ansible.builtin.debug:
+    msg: "{{ lookup('ansible.builtin.template', 'etc/apt/sources.list.d/99ansible.sources') }}"
 
 - name: Adding apt signing key
-  become: true
   ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
     file: "{{ item.file | default(omit) }}"
@@ -36,15 +62,24 @@
     validate_certs: "{{ item.validate_certs | default(omit) }}"
     state: present
   loop: "{{ apt_keys }}"
+  when: not apt_repositories_new
+
+- name: "Adding repositories files for new distributions"
+  ansible.builtin.template:
+    src: "etc/apt/sources.list.d/99ansible.sources"
+    dest: "/etc/apt/sources.list.d/99ansible.sources"
+    mode: '0755'
+  when: apt_repositories_new
 
 - name: Adding repositories
-  become: true
   ansible.builtin.apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default(omit) }}"
     update_cache: true
   loop: "{{ apt_repositories }}"
-  when: item.repo is defined
+  when:
+    - not apt_repositories_new
+    - item.repo is defined
 
 - name: Upgrading system
   become: true
