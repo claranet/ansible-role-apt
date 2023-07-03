@@ -12,7 +12,7 @@ def test_package(host):
 
 
 def test_pythonpip(host):
-    if host.system_info.distribution == 'debian' and host.system_info.codename == 'bullseye':
+    if host.system_info.distribution == 'debian' and host.system_info.codename in ['bullseye', 'bookworm']:
         package_name = 'python3-pip'
     else:
         package_name = 'python-pip'

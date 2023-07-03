@@ -2,10 +2,15 @@
 - name: basic-package-install
   hosts: all
   become: true
+  pre_tasks:
+    - name: Set ansible distributions
+      ansible.builtin.set_fact:
+        ansible_distribution_custom_name: "{{ (ansible_distribution | lower) + '-' + (ansible_distribution_release | lower) }}"
+
   roles:
     - role: claranet.apt
       vars:
         apt_upgrade: true
         apt_packages:
           - name: apache2
-          - name: "{{ ( ansible_distribution + '-' + ansible_distribution_release == 'Debian-bullseye' ) | ternary('python3-pip', 'python-pip') }}"
+          - name: "{{ ( ansible_distribution_custom_name in ['debian-bullseye', 'debian-bookworm'] ) | ternary('python3-pip', 'python-pip') }}"

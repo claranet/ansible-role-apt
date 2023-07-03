@@ -16,3 +16,5 @@ def test_version(host):
         assert p.version.startswith("1.14")
     elif host.system_info.distribution == 'debian' and host.system_info.codename == 'bullseye':
         assert p.version.startswith("1.18")
+    elif host.system_info.distribution == 'debian' and host.system_info.codename == 'bookworm':
+        assert p.version.startswith("1.22")
