@@ -1,53 +1,41 @@
 ---
-- name: Installing required packages
+- name: "Installing required packages"
   ansible.builtin.apt:
     pkg: "{{ item }}"
     state: present
     update_cache: true
   loop: "{{ _apt_required_packages }}"
 
-- name: Ensure directory structure exists
+- name: "Ensure directory structure exists"
   ansible.builtin.file:
     path: "/{{ item.path }}"
     state: directory
-    mode: '0755'
-  with_filetree: "{{ ['../templates'] }}"  # noqa: schema
+    mode: "0755"
+  with_community.general.filetree: "../templates"  # noqa: deprecated-bare-vars
   when: item.state == "directory"
 
-- name: Ensure files are populated from templates
+- name: "Ensure files are populated from templates"
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "/{{ item.path }}"
     mode: '0444'
-  with_filetree: "{{ ['../templates'] }}"  # noqa: schema
+  with_community.general.filetree: "../templates"  # noqa: deprecated-bare-vars
   when:
     - item.state == "file"
     - item.path != "etc/apt/sources.list.d/99ansible.sources"
 
-- name: "Download apt keys"
-  ansible.builtin.get_url:
-    url: "{{ item.key }}"
-    dest: "/usr/share/keyrings/{{ item.key | urlsplit('path') | regex_replace('/|_', '') }}"
-    mode: "0664"
-    validate_certs: "{{ item.key.validate_certs | default(false) }}"
-  loop: "{{ apt_repositories_new }}"
-
-- name: "Generate gpg keys"
-  ansible.builtin.command:
-    cmd: "gpg --dearmor /usr/share/keyrings/{{ item.key | urlsplit('path') | regex_replace('/|_', '') }}"
-    creates: "/usr/share/keyrings/{{ item.key | urlsplit('path') | regex_replace('/|_', '') }}"
-    chdir: "/usr/share/keyrings"
-  register: _apt_generate_gpt_keys
-  loop: "{{ apt_repositories_new }}"
-  changed_when: _apt_generate_gpt_keys.rc != 0
+- name: "Manage apt repositories for new distributions"
+  ansible.builtin.include_tasks: "apt_repo_new.yml"
   when:
     - not apt_repositories
     - not apt_keys
     - apt_repositories_new
-    - item.key is defined
-    - item.key is url
+  loop: "{{ apt_repositories_new }}"
+  loop_control:
+    label: "{{ item.urls | join(' ') if item.urls is not string else item.urls }}"
 
-- name: Adding apt signing key
+
+- name: "Adding apt signing key"
   ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
     file: "{{ item.file | default(omit) }}"
@@ -58,26 +46,23 @@
     validate_certs: "{{ item.validate_certs | default(omit) }}"
     state: present
   loop: "{{ apt_keys }}"
+  loop_control:
+    label: "{{ item.url }}"
   when: not apt_repositories_new
 
-- name: "Adding repositories files for new distributions"
-  ansible.builtin.template:
-    src: "etc/apt/sources.list.d/99ansible.sources"
-    dest: "/etc/apt/sources.list.d/99ansible.sources"
-    mode: '0755'
-  when: apt_repositories_new
-
-- name: Adding repositories
+- name: "Adding repositories"
   ansible.builtin.apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default(omit) }}"
     update_cache: true
   loop: "{{ apt_repositories }}"
+  loop_control:
+    label: "{{ item.repo }}"
   when:
     - not apt_repositories_new
     - item.repo is defined
 
-- name: Upgrading system
+- name: "Upgrading system"
   become: true
   ansible.builtin.apt:
     upgrade: "{{ apt_upgrade }}"
@@ -85,7 +70,7 @@
     autoremove: "{{ apt_autoremove }}"
   when: apt_upgrade
 
-- name: Installing packages
+- name: "Installing packages"
   become: true
   ansible.builtin.apt:
     name: "{{ item.name | default(omit) }}"
@@ -99,7 +84,7 @@
     update_cache: true
   loop: "{{ apt_packages }}"
 
-- name: Package unattended-upgrades
+- name: "Package unattended-upgrades"
   ansible.builtin.apt:
     name: unattended-upgrades
     state: >-
@@ -110,7 +95,7 @@
       {%- endif -%}
     cache_valid_time: 3600
 
-- name: Package apt-listchanges
+- name: "Package apt-listchanges"
   ansible.builtin.apt:
     name: apt-listchanges
     state: >-
