@@ -9,13 +9,3 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 def test_package(host):
     p = host.package('apache2')
     assert p.is_installed
-
-
-def test_pythonpip(host):
-    if host.system_info.distribution == 'debian' and host.system_info.codename in ['bullseye', 'bookworm']:
-        package_name = 'python3-pip'
-    else:
-        package_name = 'python-pip'
-
-    p = host.package(package_name)
-    assert p.is_installed

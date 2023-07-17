@@ -13,4 +13,3 @@
         apt_upgrade: true
         apt_packages:
           - name: apache2
-          - name: "{{ ( ansible_distribution_custom_name in ['debian-bullseye', 'debian-bookworm'] ) | ternary('python3-pip', 'python-pip') }}"
