@@ -108,13 +108,11 @@ Add repositories and install packages from those
       - name: nginx
       - name: nodejs
     apt_repositories_new:
-      - types:
-          - deb
-          - deb-src
+      - types: deb # can be string or list
         urls: "https://deb.nodesource.com/node_18.x"
         suites: "{{ ansible_distribution_release|lower }}"
         components: "main"
-        key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key # can be url or content of file
 
 ```
 
