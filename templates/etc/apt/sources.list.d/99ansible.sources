@@ -1,24 +1,24 @@
 # {{ ansible_managed }}
 
-{% for repositories in apt_repositories_new %}
+{% for repository in apt_repositories_new %}
 
-{% if repositories.types is defined %}
-Types: {{ repositories.types | join(' ') if repositories.types is not string else repositories.types }}
+{% if repository.types is defined %}
+Types: {{ repository.types | join(' ') if repository.types is not string else repository.types }}
 {% endif %}
-{% if repositories.urls is defined %}
-URIs: {{ repositories.urls | join(' ') if repositories.urls is not string else repositories.urls }}
+{% if repository.urls is defined %}
+URIs: {{ repository.urls | join(' ') if repository.urls is not string else repository.urls }}
 {% endif %}
-{% if repositories.suites is defined %}
-Suites: {{ repositories.suites | join(' ') if repositories.suites is not string else repositories.suites }}
+{% if repository.suites is defined %}
+Suites: {{ repository.suites | join(' ') if repository.suites is not string else repository.suites }}
 {% endif %}
-{% if repositories.components is defined %}
-Components: {{ repositories.components | join(' ') if repositories.components is not string else repositories.components }}
+{% if repository.components is defined %}
+Components: {{ repository.components | join(' ') if repository.components is not string else repository.components }}
 {% endif %}
-{% if repositories.architectures is defined %}
-Architectures: {{ repositories.architectures | join(' ') if repositories.architectures is not string else repositories.architectures }}
+{% if repository.architectures is defined %}
+Architectures: {{ repository.architectures | join(' ') if repository.architectures is not string else repository.architectures }}
 {% endif %}
-{% if repositories.key is defined %}
-Signed-By: {{ '/usr/share/keyrings/' + ((repositories.key | urlsplit('path') | regex_replace('/|_', '')) if repositories.key is url else repositories.key) }}
+{% if repository.key is defined %}
+Signed-By: {{ '/usr/share/keyrings/' + _apt_key_path }}
 {% endif %}
 
 {% endfor %}
