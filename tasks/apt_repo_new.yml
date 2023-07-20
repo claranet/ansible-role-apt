@@ -1,10 +1,11 @@
 ---
-- name: "Set facts" # build string for extract urls and suites from apt repositories informations
+- name: "Set facts"   # build string for extract urls and suites from apt repositories informations
   ansible.builtin.set_fact:
     _apt_extract_urls: "{{ item.urls | join('') if (item.urls is not string) and (item.urls is iterable) else item.urls }}"
     _apt_extract_suites: "{{ item.suites | join('') if (item.suites is not string) and (item.suites is iterable) else item.suites }}"
 
-- name: Construct path to store apt keys  # if keys is url construct path with path, else construct with repo urls and repo suites
+# if keys is url construct path with path, else construct with repo urls and repo suites
+- name: Construct path to store apt keys   # noqa: var-spacing
   ansible.builtin.set_fact:
     _apt_construct_key_path_from_content: "{{ (_apt_extract_urls + _apt_extract_suites) | regex_replace('/| ', '') | regex_replace(':', '-') }}"
     _apt_construct_key_path_from_url: "{{ item.key | urlsplit('path') | regex_replace('/|_', '') | regex_replace(':', '-') }}"
