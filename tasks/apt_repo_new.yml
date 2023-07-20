@@ -1,10 +1,10 @@
 ---
-- name: "Set facts"
+- name: "Set facts" # build string for extract urls and suites from apt repositories informations
   ansible.builtin.set_fact:
-    _apt_extract_urls: "{{ item.urls | join('') if item.urls is not string else item.urls }}"
-    _apt_extract_suites: "{{ item.suites | join('') if item.suites is not string else item.suites }}"
+    _apt_extract_urls: "{{ item.urls | join('') if (item.urls is not string) and (item.urls is iterable) else item.urls }}"
+    _apt_extract_suites: "{{ item.suites | join('') if (item.suites is not string) and (item.suites is iterable) else item.suites }}"
 
-- name: Construct path to store apt keys
+- name: Construct path to store apt keys  # if keys is url construct path with path, else construct with repo urls and repo suites
   ansible.builtin.set_fact:
     _apt_construct_key_path_from_content: "{{ (_apt_extract_urls + _apt_extract_suites) | regex_replace('/| ', '') | regex_replace(':', '-') }}"
     _apt_construct_key_path_from_url: "{{ item.key | urlsplit('path') | regex_replace('/|_', '') | regex_replace(':', '-') }}"
@@ -28,7 +28,7 @@
   when:
     - item.key is url
 
-- name: "Save content of key to a file"
+- name: "Write key's content to /usr/share/keyrings/{{ _apt_key_path }}"
   ansible.builtin.copy:
     content: "{{ item.key }}"
     dest: "/usr/share/keyrings/{{ _apt_key_path }}"
@@ -36,7 +36,7 @@
   when:
     - item.key is not url
 
-- name: "Generate gpg keys"  # noqa: var-spacing
+- name: "Generate GPG keys"  # noqa: var-spacing
   ansible.builtin.command:
     cmd: "gpg --dearmor /usr/share/keyrings/{{ _apt_key_path }}"
     creates: "/usr/share/keyrings/{{ _apt_key_path }}.gpg"

@@ -34,7 +34,6 @@
   loop_control:
     label: "{{ item.urls | join(' ') if item.urls is not string else item.urls }}"
 
-
 - name: "Adding apt signing key"
   ansible.builtin.apt_key:
     id: "{{ item.id | default(omit) }}"
