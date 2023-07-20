@@ -7,7 +7,5 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 def test_ppa_package(host):
-    pkgnode = host.package('nodejs')
-    pkgngnix = host.package('nginx')
-    assert pkgnode.is_installed
-    assert pkgngnix.is_installed
+    assert host.package('nodejs').is_installed
+    assert host.package('nginx').is_installed
