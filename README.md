@@ -45,6 +45,12 @@ apt_config_listchanges_package_state          | **'auto'**                      
 
 N/A
 
+## !! Important Notes
+
+!! Deprecation warnings
+
+**apt_keys** and **apt_repositories** are deprecated. Switch to **apt_repositories_new** for support newest debian
+
 ## :pencil2: Example Playbook
 
 Install packages
@@ -71,7 +77,7 @@ Add repositories and install packages from those
 ```yaml
   hosts: all
   vars:
-    - apt_repositories:
+    - apt_repositories:   # deprecated
       # contrib repo
       - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
       # non-free repo
@@ -80,7 +86,7 @@ Add repositories and install packages from those
       - repo: ppa:nginx/stable
         # not needed on ubuntu distribution
         codename: trusty
-    - apt_keys:
+    - apt_keys:    # deprecated
       # dotdeb key
       - url: https://www.dotdeb.org/dotdeb.gpg
     - apt_packages:
