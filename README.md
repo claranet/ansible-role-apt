@@ -28,7 +28,7 @@ apt_upgrade                                   | **false**                       
 apt_autoremove                                | **true**                                    | Remove packages that are no longer needed for dependencies
 apt_packages                                  | **[]**                                      | Packages list to install
 apt_repositories                              | **[]**                                      | Repositories list to configure
-apt_repositories_new                          | **[]**                                      | Repositories list to configure for new distributions
+apt_ppas                                      | **[]**                                      | PPA repositories to add
 apt_keys                                      | **[]**                                      | Keys list to use with external repositories
 apt_force                                     | **false**                                   | Force installs / removes
 apt_install_recommends                        | **false**                                   | Install recommended packages
@@ -72,35 +72,7 @@ Install packages
           - deb: "http://repo.zabbix.com/zabbix/6.1/{{ ansible_distribution | lower }}/pool/main/z/zabbix-release/zabbix-release_6.1-2+{{ ansible_distribution |lower }}{{ ansible_distribution_version }}_all.deb"ansible_distribution_release }}_all.deb
 ```
 
-Add repositories and install packages from those
-
-```yaml
-  hosts: all
-  vars:
-    - apt_repositories:   # deprecated
-      # contrib repo
-      - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
-      # non-free repo
-      - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} non-free
-      # nginx ppa repo
-      - repo: ppa:nginx/stable
-        # not needed on ubuntu distribution
-        codename: trusty
-    - apt_keys:    # deprecated
-      # dotdeb key
-      - url: https://www.dotdeb.org/dotdeb.gpg
-    - apt_packages:
-      # package from contrib repo
-      - name: java-package
-      # package from non-free repo
-      - name: album
-      # package from dotdeb repo
-      - name: php7.0
-      # package from nginx ppa repo
-      - name: nginx
-  roles: 
-    - apt
-```
+PPA package installation
 
 ```yaml
 - name: ppa-package-install
@@ -110,16 +82,20 @@ Add repositories and install packages from those
     - role: claranet.apt
   vars:
     apt_upgrade: true
-    apt_packages:
-      - name: nginx
-      - name: nodejs
+    apt_ppas:
+      # nginx ppa repo
+      - repo: ppa:nginx/stable
+        # not needed on ubuntu distribution
+        codename: trusty
     apt_repositories_new:
       - types: deb # can be string or list
         urls: "https://deb.nodesource.com/node_18.x"
-        suites: "{{ ansible_distribution_release|lower }}"
+        suites: "{{ ansible_distribution_release | lower }}"
         components: "main"
         key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key # can be url or content of file
-
+    apt_packages:
+      - name: nginx
+      - name: nodejs
 ```
 
 Do an upgrade
