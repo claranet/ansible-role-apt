@@ -25,41 +25,24 @@
     - item.path != "etc/apt/sources.list.d/99ansible.sources"
 
 - name: "Manage apt repositories for new distributions"
-  ansible.builtin.include_tasks: "apt_repo_new.yml"
+  ansible.builtin.include_tasks: "apt_repositories.yml"
   when:
     - not apt_repositories
     - not apt_keys
-    - apt_repositories_new
-  loop: "{{ apt_repositories_new }}"
+    - apt_repositories
+  loop: "{{ apt_repositories }}"
   loop_control:
     label: "{{ item.urls | join(' ') if item.urls is not string else item.urls }}"
 
-- name: "Adding apt signing key"
-  ansible.builtin.apt_key:
-    id: "{{ item.id | default(omit) }}"
-    file: "{{ item.file | default(omit) }}"
-    data: "{{ item.data | default(omit) }}"
-    keyring: "{{ item.keyring | default(omit) }}"
-    keyserver: "{{ item.keyserver | default(omit) }}"
-    url: "{{ item.url | default(omit) }}"
-    validate_certs: "{{ item.validate_certs | default(omit) }}"
-    state: present
-  loop: "{{ apt_keys }}"
-  loop_control:
-    label: "{{ item.url }}"
-  when: not apt_repositories_new
-
-- name: "Adding repositories"
+- name: "Adding ppa repositories"
   ansible.builtin.apt_repository:
     repo: "{{ item.repo }}"
     codename: "{{ item.codename | default(omit) }}"
     update_cache: true
-  loop: "{{ apt_repositories }}"
+  loop: "{{ apt_ppas }}"
   loop_control:
     label: "{{ item.repo }}"
-  when:
-    - not apt_repositories_new
-    - item.repo is defined
+  when: item.repo is defined
 
 - name: "Upgrading system"
   become: true
