@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-{% for repository in apt_repositories_new %}
+{% for repository in apt_repositories %}
 
 {% if repository.types is defined %}
 Types: {{ repository.types | join(' ') if repository.types is not string else repository.types }}
