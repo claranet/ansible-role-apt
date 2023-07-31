@@ -7,10 +7,15 @@
       vars:
         apt_upgrade: true
         apt_packages:
-          - name: java-package
-          - name: album
+          - name: apache2
         apt_repositories:
           # contrib repo
-          - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} contrib
+          - types: deb
+            urls: "http://deb.debian.org/{{ ansible_distribution | lower }}"
+            suites: "{{ ansible_distribution_release }}"
+            components: "contrib"
           # non-free repo
-          - repo: deb http://deb.debian.org/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} non-free
+          - types: deb
+            urls: "http://deb.debian.org/{{ ansible_distribution | lower }}"
+            suites: "{{ ansible_distribution_release }}"
+            components: "non-free"
