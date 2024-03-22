@@ -166,10 +166,15 @@ apt_config_default:
     # could be upgraded or installed.
     Allow-APT-Mark-Fallback: true
 
-apt_config_additional_preformatted_config: ''
+apt_config_additional_preformatted_config: ""
 
 apt_config_listchanges_mail: null
 
-apt_config_unattended_upgrades_package_state: 'auto'
+apt_config_unattended_upgrades_package_state: "auto"
 apt_config_unattended_upgrades_timer_override: null
-apt_config_listchanges_package_state: 'auto'
+apt_config_listchanges_package_state: "auto"
+
+# Update the apt cache if it is older than the cache_valid_time.
+# This option is set in seconds. As of Ansible 2.4, if explicitly set,
+# this sets update_cache=yes. Default: 0
+apt_cache_valid_time: 0
