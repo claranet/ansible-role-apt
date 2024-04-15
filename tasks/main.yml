@@ -75,7 +75,7 @@
       {%- else -%}
       {{- apt_config_unattended_upgrades_package_state -}}
       {%- endif -%}
-    cache_valid_time: 3600
+    cache_valid_time: "{{ apt_cache_valid_time }}"
 
 - name: "Package apt-listchanges"
   ansible.builtin.apt:
