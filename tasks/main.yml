@@ -3,7 +3,7 @@
   ansible.builtin.apt:
     pkg: "{{ item }}"
     state: present
-    update_cache: true
+    cache_valid_time: "{{ apt_cache_valid_time }}"
   loop: "{{ _apt_required_packages }}"
 
 - name: "Ensure directory structure exists"
@@ -63,7 +63,7 @@
     dpkg_options: "{{ apt_dpkg_options | default(omit) }}"
     install_recommends: "{{ apt_install_recommends }}"
     default_release: "{{ apt_default_release | default(omit) }}"
-    update_cache: true
+    cache_valid_time: "{{ apt_cache_valid_time }}"
   loop: "{{ apt_packages }}"
 
 - name: "Package unattended-upgrades"
@@ -75,7 +75,7 @@
       {%- else -%}
       {{- apt_config_unattended_upgrades_package_state -}}
       {%- endif -%}
-    cache_valid_time: 3600
+    cache_valid_time: "{{ apt_cache_valid_time }}"
 
 - name: "Package apt-listchanges"
   ansible.builtin.apt:
@@ -86,3 +86,4 @@
       {%- else -%}
       {{- apt_config_listchanges_package_state -}}
       {%- endif -%}
+    cache_valid_time: "{{ apt_cache_valid_time }}"

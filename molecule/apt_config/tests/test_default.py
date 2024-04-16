@@ -1,13 +1,5 @@
 import os
 
-import testinfra.utils.ansible_runner
-
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("all")
-
-# have a look at https://testinfra.readthedocs.io/en/latest/modules.html to see the different possible tests
-
 
 def test_apt_confd_99ansible(host):
     f = host.file("/etc/apt/apt.conf.d/99ansible")
