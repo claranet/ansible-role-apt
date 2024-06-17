@@ -81,12 +81,13 @@ PPA package installation
       - repo: ppa:nginx/stable
         # not needed on ubuntu distribution
         codename: trusty
-    apt_repositories_new:
+    apt_repositories:
       - types: deb # can be string or list
         urls: "https://deb.nodesource.com/node_18.x"
         suites: "{{ ansible_distribution_release | lower }}"
         components: "main"
         key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key # can be url or content of file
+        # key: "{{ lookup('url', 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key', split_lines=False) }}"
     apt_packages:
       - name: nginx
       - name: nodejs
