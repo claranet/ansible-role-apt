@@ -5,7 +5,7 @@
     _apt_extract_suites: "{{ item.suites | join('') if (item.suites is not string) and (item.suites is iterable) else item.suites }}"
 
 # if keys is url construct path with path, else construct with repo urls and repo suites
-- name: Construct path to store apt keys   # noqa: var-spacing
+- name: Construct path to store apt keys   # noqa: jinja\[spacing]
   ansible.builtin.set_fact:
     _apt_construct_key_path_from_content: "{{ (_apt_extract_urls + _apt_extract_suites) | regex_replace('/| ', '') | regex_replace(':', '-') }}"
     _apt_construct_key_path_from_url: "{{ item.key | urlsplit('path') | regex_replace('/|_', '') | regex_replace(':', '-') }}"
@@ -14,13 +14,13 @@
   ansible.builtin.set_fact:
     _apt_key_path: "{{ (item.key is url) | ternary(_apt_construct_key_path_from_url, _apt_construct_key_path_from_content) }}"
 
-- name: "Adding repositories files for new distributions"
+- name: "Adding repositories files"
   ansible.builtin.template:
     src: "etc/apt/sources.list.d/99ansible.sources"
     dest: "/etc/apt/sources.list.d/99ansible.sources"
     mode: '0755'
 
-- name: "Download apt keys"  # noqa: var-spacing
+- name: "Download apt keys"  # noqa: jinja\[spacing]
   ansible.builtin.get_url:
     url: "{{ item.key }}"
     dest: "/usr/share/keyrings/{{ _apt_key_path }}"
@@ -37,7 +37,7 @@
   when:
     - item.key is not url
 
-- name: "Generate GPG keys"  # noqa: var-spacing
+- name: "Generate GPG keys"  # noqa: jinja\[spacing]
   ansible.builtin.command:
     cmd: "gpg --dearmor /usr/share/keyrings/{{ _apt_key_path }}"
     creates: "/usr/share/keyrings/{{ _apt_key_path }}.gpg"

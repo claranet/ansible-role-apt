@@ -24,10 +24,9 @@
     - item.state == "file"
     - item.path != "etc/apt/sources.list.d/99ansible.sources"
 
-- name: "Manage apt repositories for new distributions"
+- name: "Manage apt repositories"
   ansible.builtin.include_tasks: "apt_repositories.yml"
   when:
-    - not apt_repositories
     - not apt_keys
     - apt_repositories
   loop: "{{ apt_repositories }}"
