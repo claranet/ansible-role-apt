@@ -9,6 +9,7 @@
     apt_packages:
       - name: nginx
       - name: nodejs
+      - name: java-11-amazon-corretto-jdk
     apt_repositories:
       - types: "deb"
         urls: "https://deb.nodesource.com/node_18.x"
@@ -16,6 +17,11 @@
         components: "main"
         key: "{{ lookup('url', 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key', split_lines=False) }}"
         # key: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+      - types: "deb"
+        urls: "https://apt.corretto.aws"
+        suites: "stable"
+        components: "main"
+        key: https://apt.corretto.aws/corretto.key
     apt_ppas:
       - repo: ppa:nginx/stable
         codename: trusty
