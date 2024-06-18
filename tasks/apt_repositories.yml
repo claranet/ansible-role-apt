@@ -1,12 +1,12 @@
 ---
+- name: "Extract urls and suites as facts variables"   # build string for extract urls and suites from apt repositories informations
+  ansible.builtin.set_fact:
+    _apt_extract_urls: "{{ item.urls | join('') if (item.urls is not string) and (item.urls is iterable) else item.urls }}"
+    _apt_extract_suites: "{{ item.suites | join('') if (item.suites is not string) and (item.suites is iterable) else item.suites }}"
+
 - name: "Configure apt repository with key"
   when: item.key is defined
   block:
-    - name: "Set facts"   # build string for extract urls and suites from apt repositories informations
-      ansible.builtin.set_fact:
-        _apt_extract_urls: "{{ item.urls | join('') if (item.urls is not string) and (item.urls is iterable) else item.urls }}"
-        _apt_extract_suites: "{{ item.suites | join('') if (item.suites is not string) and (item.suites is iterable) else item.suites }}"
-
     # if keys is url construct path with path, else construct with repo urls and repo suites
     - name: Construct path to store apt keys   # noqa: jinja\[spacing]
       ansible.builtin.set_fact:
@@ -42,8 +42,15 @@
       register: _apt_generate_gpt_keys
       changed_when: _apt_generate_gpt_keys.rc != 0
 
+
+- name: "Construct repository filename"
+  ansible.builtin.set_fact:
+    _apt_repository_file_name: "{{ _apt_extract_urls | urlsplit('hostname') | replace('.', '-') }}"
+
 - name: "Adding repositories files"
   ansible.builtin.template:
     src: "etc/apt/sources.list.d/99ansible.sources"
-    dest: "/etc/apt/sources.list.d/99ansible.sources"
+    dest: "/etc/apt/sources.list.d/{{ _apt_repository_file_name }}.sources"
     mode: '0755'
+  vars:
+    _apt_repository: "{{ item }}"
