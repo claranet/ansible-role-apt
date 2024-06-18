@@ -24,10 +24,9 @@
     - item.state == "file"
     - item.path != "etc/apt/sources.list.d/99ansible.sources"
 
-- name: "Manage apt repositories for new distributions"
+- name: "Manage apt repositories"
   ansible.builtin.include_tasks: "apt_repositories.yml"
   when:
-    - not apt_repositories
     - not apt_keys
     - apt_repositories
   loop: "{{ apt_repositories }}"
@@ -64,6 +63,7 @@
     install_recommends: "{{ apt_install_recommends }}"
     default_release: "{{ apt_default_release | default(omit) }}"
     cache_valid_time: "{{ apt_cache_valid_time }}"
+    update_cache: "{{ item.update_cache | default(true) }}"
   loop: "{{ apt_packages }}"
 
 - name: "Package unattended-upgrades"
