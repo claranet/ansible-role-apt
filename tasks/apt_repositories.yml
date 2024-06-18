@@ -3,6 +3,8 @@
   ansible.builtin.set_fact:
     _apt_extract_urls: "{{ item.urls | join('') if (item.urls is not string) and (item.urls is iterable) else item.urls }}"
     _apt_extract_suites: "{{ item.suites | join('') if (item.suites is not string) and (item.suites is iterable) else item.suites }}"
+    _apt_extract_components: "{{ item.components | join('') if (item.components is not string) and (item.components is iterable) else item.components }}"
+
 
 - name: "Configure apt repository with key"
   when: item.key is defined
@@ -42,10 +44,9 @@
       register: _apt_generate_gpt_keys
       changed_when: _apt_generate_gpt_keys.rc != 0
 
-
 - name: "Construct repository filename"
   ansible.builtin.set_fact:
-    _apt_repository_file_name: "{{ _apt_extract_urls | urlsplit('hostname') | replace('.', '-') }}"
+    _apt_repository_file_name: "{{ (_apt_extract_urls | urlsplit('hostname') + '-' + _apt_extract_suites + '-' + _apt_extract_components) | replace('.', '-') }}"
 
 - name: "Adding repositories files"
   ansible.builtin.template:
