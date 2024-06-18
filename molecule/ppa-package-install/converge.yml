@@ -16,7 +16,6 @@
         suites: "{{ ansible_distribution_release|lower }}"
         components: "main"
         key: "{{ lookup('url', 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key', split_lines=False) }}"
-        # key: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
       - types: "deb"
         urls: "https://apt.corretto.aws"
         suites: "stable"
