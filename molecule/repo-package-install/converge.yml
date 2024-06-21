@@ -6,8 +6,16 @@
   roles:
     - role: claranet.apt
       vars:
-        apt_upgrade: true
+        apt_upgrade: false
         apt_packages:
-          - deb: "http://nginx.org/packages/{{ ansible_distribution | lower }}/pool/nginx/n/nginx/nginx_1.24.0-1~{{ ansible_distribution_release | lower }}_amd64.deb"
-          - name: zabbix-server-mysql
-          - name: zabbix-frontend-php
+          - deb: "http://ftp.de.debian.org/debian/pool/main/h/htop/htop_3.3.0-4_amd64.deb"
+          - name: >-
+              {%- if ansible_distribution == "Debian" and ansible_distribution_release == "bullseye" -%}
+                nginx=1.18.*
+              {%- elif ansible_distribution == "Debian" and ansible_distribution_release == "bookworm" -%}
+                nginx=1.22.*
+              {%- elif ansible_distribution == "Ubuntu" and ansible_distribution_version == "24.04" -%}
+                nginx=1.24.*
+              {%- else -%}
+                nginx=1.18.*
+              {%- endif -%}
