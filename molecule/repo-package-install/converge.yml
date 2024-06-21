@@ -2,13 +2,27 @@
 - name: repo-package-install
   hosts: all
   become: true
+  pre_tasks:
+    - name: "Install libncurses6 dependency for htop"
+      ansible.builtin.apt:
+        name:
+          - libgpm2
+          - libncursesw6
+          - libnl-3-200
+          - libnl-genl-3-200
+          - gpm
+        state: present
+        update_cache: true
+      when:
+        - ansible_distribution == "Debian"
+        - ansible_distribution_release == "bullseye"
 
   roles:
     - role: claranet.apt
       vars:
         apt_upgrade: false
         apt_packages:
-          - deb: "http://ftp.de.debian.org/debian/pool/main/h/htop/htop_3.3.0-4_amd64.deb"
+          - deb: "http://ftp.de.debian.org/debian/pool/main/h/htop/htop_3.0.5-7_amd64.deb"
           - name: >-
               {%- if ansible_distribution == "Debian" and ansible_distribution_release == "bullseye" -%}
                 nginx=1.18.*
