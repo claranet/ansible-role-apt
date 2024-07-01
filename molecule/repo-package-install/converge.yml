@@ -2,12 +2,34 @@
 - name: repo-package-install
   hosts: all
   become: true
+  pre_tasks:
+    - name: "Install libncurses6 dependency for htop"
+      ansible.builtin.apt:
+        name:
+          - libgpm2
+          - libncursesw6
+          - libnl-3-200
+          - libnl-genl-3-200
+          - gpm
+        state: present
+        update_cache: true
+      when:
+        - ansible_distribution == "Debian"
+        - ansible_distribution_release == "bullseye"
 
   roles:
     - role: claranet.apt
       vars:
-        apt_upgrade: true
+        apt_upgrade: false
         apt_packages:
-          - deb: "http://nginx.org/packages/{{ ansible_distribution | lower }}/pool/nginx/n/nginx/nginx_1.24.0-1~{{ ansible_distribution_release | lower }}_amd64.deb"
-          - name: zabbix-server-mysql
-          - name: zabbix-frontend-php
+          - deb: "http://ftp.de.debian.org/debian/pool/main/h/htop/htop_3.0.5-7_amd64.deb"
+          - name: >-
+              {%- if ansible_distribution == "Debian" and ansible_distribution_release == "bullseye" -%}
+                nginx=1.18.*
+              {%- elif ansible_distribution == "Debian" and ansible_distribution_release == "bookworm" -%}
+                nginx=1.22.*
+              {%- elif ansible_distribution == "Ubuntu" and ansible_distribution_version == "24.04" -%}
+                nginx=1.24.*
+              {%- else -%}
+                nginx=1.18.*
+              {%- endif -%}
