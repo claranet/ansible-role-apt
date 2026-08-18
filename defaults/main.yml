@@ -2,6 +2,7 @@
 apt_upgrade: false
 apt_autoremove: true
 apt_packages: []
+apt_packages_remove: []
 apt_repositories: []
 apt_ppas: []
 apt_keys: []
